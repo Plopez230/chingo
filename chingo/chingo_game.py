@@ -16,8 +16,8 @@ def score_test(user):
     user.tests_passed += 1
     user.save()
 
-def search_characters(keyword):
-    if keyword == "":
+def search_words(keyword):
+    if not keyword or keyword == "":
         return []
     queryset = Word.objects.filter(
         Q(simplified__icontains=keyword)
@@ -28,7 +28,7 @@ def search_characters(keyword):
     return queryset
 
 def search_lists(keyword):
-    if keyword == "":
+    if not keyword or keyword == "":
         return []
     queryset = WordList.objects.filter(
         Q(name__icontains=keyword)
