@@ -1,0 +1,60 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% block content %}
+
+<!-- Words found -->
+<div class="container-fluid">
+  <div class="row mb-2">
+    <div class="col-sm-12">
+      <h3>{% translate "Words matching the keyword" %} "{{ request.GET.keyword }}"</h3>
+    </div>
+  </div>
+    {% for word in words %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h5><strong class="text-info">{{ word.simplified }}</strong> {{ word.pinyin }}</h5>
+      <p>{% translate word.get_part_of_speech_display %}. {{ word.traslation }} <br>Subido por usuario el dia </p>
+      <p></p>
+    </div>
+    
+  </div>
+  {% empty %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h5>{% translate "No words found" %}</h5>
+    </div>
+  </div>
+    <p></p>
+  {% endfor %}
+</div>
+<!-- Lists found -->
+<div class="container-fluid">
+  <div class="row mb-2">
+    <div class="col-sm-12">
+      <h3>{% translate "Lists matching the keyword" %} "{{ request.GET.keyword }}"</h3>
+    </div>
+  </div>
+  <div class="row">
+    {% for list in lists %}
+    <div class="col-md-12 col-lg-6 col-xl-4">
+      <div class="card mb-2 bg-gradient-dark">
+        <img class="card-img-top" src="{{ list.image }}" alt="Dist Photo 1" style="filter:brightness(70%)">
+        <div class="card-img-overlay d-flex flex-column justify-content-end">
+          <h5 class="card-title text-primary text-white"><a href="{% url 'chingo:list' list_id=list.id %}"
+              class="text-white">{{ list.name }}</a></h5>
+          <p class="card-text text-white pb-2 pt-1"><a href="{% url 'chingo:list' list_id=list.id %}"
+              class="text-white">{{ list.description }}</a></p>
+          <a href="{% url 'chingo:list' list_id=list.id %}" class="text-white">
+            {{ list.owner.username }}.
+            {{ list.creation_date }}</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <div class="col-sm-12">
+        <h5>{% translate "No lists found" %}</h5>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

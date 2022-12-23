@@ -1,0 +1,85 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% block title %}
+{% translate "Check your choice" %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+
+  <div class="col-md-6">
+
+    <div class="card card-widget widget-user">
+
+      {% if wrong %}
+      <div class="widget-user-header bg-danger">
+        {% else %}
+        <div class="widget-user-header bg-success">
+          {% endif %}
+          <h1 class="widget-user-username"><br></h1>
+          <h1 class="widget-user-desc">huā 花</h1>
+        </div>
+        <div class="card-footer">
+
+          <button type="button" class="btn btn-info btn-block btn-flat">
+            <h3>Next question</h3>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="col-md-6">
+      
+      <div class="card card-widget">
+
+        <div class="card-footer">
+          <h5>Your statistics</h5>
+          <div class="row">
+            <div class="col-sm-4 border-right">
+              <div class="description-block">
+                <h5 class="description-header">3,200</h5>
+                <span class="description-text">number of times wrong</span>
+              </div>
+
+            </div>
+
+            <div class="col-sm-4 border-right">
+              <div class="description-block">
+                <h5 class="description-header">13,000</h5>
+                <span class="description-text">number of times shown</span>
+              </div>
+
+            </div>
+
+            <div class="col-sm-4">
+              <div class="description-block">
+                <h5 class="description-header">35</h5>
+                <span class="description-text">number of times correct</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+{% if wrong %}
+      <div class="callout callout-danger">
+        <h5>I am a danger callout!</h5>
+        <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire
+          soul,
+          like these sweet mornings of spring which I enjoy with my whole heart.</p>
+      </div>
+      {% else %}
+      <div class="callout callout-success">
+        <h5>Congratulations!</h5>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+  {% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% block title %}
+{% translate "Choose the correct pinyin" %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card card-widget widget-user">
+      <div class="widget-user-header bg-info">
+        <h1 class="widget-user-username"><br></h1>
+        <h1 class="widget-user-desc">花</h1>
+      </div>
+      <div class="card-footer">
+    <a type="button" class="btn btn-outline-info btn-block btn-flat" href="{% url 'chingo:test_check' %}"><h3>huā</h3></a>
+    <a type="button" class="btn btn-outline-info btn-block btn-flat" href="{% url 'chingo:test_check' %}"><h3>kàn</h3></a>
+    <a type="button" class="btn btn-outline-info btn-block btn-flat" href="{% url 'chingo:test_check' %}"><h3>bái sè</h3></a>
+    <a type="button" class="btn btn-outline-info btn-block btn-flat" href="{% url 'chingo:test_check' %}"><h3>líng</h3></a>
+    <a type="button" class="btn btn-outline-info btn-block btn-flat" href="{% url 'chingo:test_check' %}"><h3>wǔ</h3></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card card-widget">
+      <div class="card-footer">
+        <h5>Your statistics</h5>
+        <div class="row">
+          <div class="col-sm-4 border-right">
+            <div class="description-block">
+              <h5 class="description-header">3,200</h5>
+              <span class="description-text">number of times wrong</span>
+            </div>
+          </div>
+          <div class="col-sm-4 border-right">
+            <div class="description-block">
+              <h5 class="description-header">13,000</h5>
+              <span class="description-text">number of times shown</span>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="description-block">
+              <h5 class="description-header">35</h5>
+              <span class="description-text">number of times correct</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
