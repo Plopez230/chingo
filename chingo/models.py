@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class ChingoUser(AbstractUser):
-    	dictionary_points = models.IntegerField(
+	dictionary_points = models.IntegerField(
 		verbose_name = _('points'),
 		default = 0
 		)
@@ -44,3 +45,137 @@ class ChingoUser(AbstractUser):
 			return _('master')
 		else:
 			return _('donnish')
+
+class Word(models.Model):
+	class PartOfSpeech(models.TextChoices):
+		NOUN = 'NOUN', _('noun')
+		PRONOUN = 'PRON', _('pronoun')
+		VERB = 'VERB', _('verb')
+		ADJECTIVE = 'ADJE', _('adjective')
+		ADVERB = 'ADVE', _('adverb')
+		NUMBER = 'NUMB', _('number')
+		CLASSIFIER = 'CLAS', _('classifier')
+		INTERJECTION = 'INTE', _('interjection')
+		ONOMATOPEIA = 'ONOM', _('onomatopeia')
+		CONJUNCTION = 'CONJ', _('conjunction')
+		PREPOSITION = 'PREP', _('preposition')
+		PARTICLE = 'PART', _('particle')
+
+	simplified = models.TextField(
+		verbose_name = _('simplified character')
+		)
+	traditional = models.TextField(
+		verbose_name = _('traditional character'),
+		null = True,
+		blank = True
+		)
+	pinyin = models.TextField(
+		verbose_name = _('pinyin transcription')
+		)
+	classifier = models.TextField(
+		verbose_name = _('classifiers (if needed)'),
+		default = '',
+		blank = True
+		)
+	translation = models.TextField(
+		verbose_name = _('translated text')
+		)
+	part_of_speech = models.CharField(
+		max_length=4,
+		choices=PartOfSpeech.choices,
+		default=PartOfSpeech.NOUN,
+	)
+	creator = models.ForeignKey(
+		ChingoUser,
+		verbose_name = _('creator of this character'),
+		on_delete = models.SET_NULL,
+		null = True
+		)
+	creation_date = models.DateTimeField(
+		verbose_name = _('date of creation'),
+		auto_now_add = True
+		)
+	class Meta:
+		verbose_name = _("character")
+		verbose_name_plural = _("characters")
+		
+	def __str__(self):
+		return '{} ({}) {}'.format(
+			self.simplified, 
+			self.pinyin, 
+			self.translation
+			)
+
+class WordList(models.Model):
+	name = models.TextField(
+		verbose_name = _('name of the list')
+		)
+	description = models.TextField(
+		verbose_name = _('brief description of the contents of the list'),
+		default = ''
+		)
+	words = models.ManyToManyField(
+		Word, 
+		verbose_name = _('words in this list'),
+		related_name = _('lists')
+		)
+	owner = models.ForeignKey(
+		ChingoUser,
+		verbose_name = _('owner of the list'),
+		on_delete = models.SET_NULL,
+		null = True
+		)
+	creation_date = models.DateTimeField(
+		verbose_name = _('date of creation'),
+		auto_now_add = True
+		)
+	image = models.TextField(
+		verbose_name = _('image'),
+		max_length=500, 
+		default = ''
+		)
+	class Meta:
+		verbose_name = _("word list")
+		verbose_name_plural = _("word lists")
+		
+	def __str__(self):
+		return '{} ({})'.format(self.name, self.owner.username)
+
+class Score(models.Model):
+	word = models.ForeignKey(
+		Word, 
+		verbose_name = _('the word whose score is stored'),
+		related_name = _("scores"),
+		on_delete = models.SET_NULL,
+		null = True
+		)
+	player = models.ForeignKey(
+		ChingoUser, 
+		verbose_name = _('player who scores'),
+		related_name = _("scores"),
+		on_delete = models.SET_NULL,
+		null = True
+		)
+	shown = models.IntegerField(
+		verbose_name = _('number of times shown'),
+		default = 0
+		)
+	correct = models.IntegerField(
+		verbose_name = _('number of times correct'),
+		default = 0
+		)
+	wrong = models.IntegerField(
+		verbose_name = _('number of times wrong'),
+		default = 0
+		)
+	next_reminder = models.DateTimeField(
+		verbose_name = _('next reminder date'),
+		auto_now_add = True,
+		null = True
+		)
+	class Meta:
+		verbose_name = _("score")
+		verbose_name_plural = _("scores")
+		
+	def __str__(self):
+		return '{}, {}'.format(self.player.username, self.word)
