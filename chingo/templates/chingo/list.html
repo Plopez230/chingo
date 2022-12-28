@@ -67,24 +67,24 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{% url 'chingo:word_add' list_id=list.id %}">{% csrf_token %}
+        <form method="post" id="new-word-form" action="{% url 'chingo:word_add' list_id=list.id %}">{% csrf_token %}
           <div class="row">
             <div class="col-md-12 col-lg-6 col-xl-6">
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <input type="text" class="form-control" name="simplified" id="add_simplified" onblur=""
+                  <input type="text" class="form-control" name="simplified" id="add_simplified" oninput="suggest_words()"
                     placeholder="{% translate 'simplified word' %}">
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <input type="text" class="form-control" name="pinyin" id="add_pinyin" onblur=""
+                  <input type="text" class="form-control" name="pinyin" id="add_pinyin" oninput="suggest_words()"
                     placeholder="{% translate 'pinyin' %}">
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <select class="form-control" name="part_of_speech">
+                  <select class="form-control" name="part_of_speech" onchange="suggest_words()">
                     {% for part_of_speech in parts_of_speech %}
                     <option value="{{ part_of_speech.0 }}">
                       {% translate part_of_speech.1 %}
@@ -97,19 +97,19 @@
             <div class="col-md-12 col-lg-6 col-xl-6">
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <input type="text" class="form-control" name="traditional" id="add_traditional" onblur=""
+                  <input type="text" class="form-control" name="traditional" id="add_traditional"  oninput="suggest_words()"
                     placeholder="{% translate 'traditional word' %}">
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <input type="text" class="form-control" name="translation" id="add_translation"
+                  <input type="text" class="form-control" name="translation" id="add_translation" oninput="suggest_words()"
                     placeholder="{% translate 'translation' %}">
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <input type="text" class="form-control" name="classifier" id="add_classifiers"
+                  <input type="text" class="form-control" name="classifier" id="add_classifiers" oninput="suggest_words()"
                     placeholder="{% translate 'classifiers' %}">
                 </div>
               </div>
@@ -125,7 +125,9 @@
         </form>
         <p></p>
       </div>
-      <div class="table-responsive p-0" style="height: 200px;">
+      <div class="table-responsive p-0" id="suggestions" style="height: 200px;">
+            <form method="post">
+              {% csrf_token %}
         <table class="table table-head-fixed text-nowrap">
           <thead>
             <tr>
@@ -134,26 +136,9 @@
             </tr>
           </thead>
           <tbody>
-            {% for word in words %}
-            <tr>
-              <td>{{ word.simplified }} ({{ word.pinyin }}): {{ word.translation }} 
-                ({{ word.part_of_speech }})</td>
-              <td>
-                <form method="post"
-                  action="{% url 'chingo:word_add_from_db' list_id=list.id word_id=word.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="close">
-                    <span aria-hidden="true"><i class="fa fa-plus"></i></span>
-                  </button>
-                  <a onclick="this.parentNode.submit();" class="btn btn-tool">
-                    {% translate "Add" %}
-                  </a>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
           </tbody>
         </table>
+            </form>
       </div>
     </div>
   </div>
@@ -335,16 +320,8 @@
     </div>
   </div>
 </div>
-<script>
-  function populate_fields(word) {
-    $("#edit-word").modal('show');
-    document.getElementById("edit_simplified").value = word.getAttribute("simplified");
-    document.getElementById("edit_traditional").value = word.getAttribute("traditional");
-    document.getElementById("edit_pinyin").value = word.getAttribute("pinyin");
-    document.getElementById("edit_part_of_speech").value = word.getAttribute("part_of_speech");
-    document.getElementById("edit_translation").value = word.getAttribute("translation");
-    document.getElementById("edit_classifiers").value = word.getAttribute("classifiers");
-    document.getElementById("edit_id").value = word.getAttribute("word_id");
-  }
-</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'dist/js/list.js'%}"></script>
 {% endblock %}
