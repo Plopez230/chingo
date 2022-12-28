@@ -1,0 +1,5 @@
+
+*.pyc
+chingo/migrations/*.py
+*.webp
+*.sqlite3
