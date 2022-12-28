@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.forms.models import model_to_dict
+from django.core import serializers
 from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
@@ -42,7 +44,7 @@ def test_view(request):
     return HttpResponse(template.render(context, request))
 
 def test_check_view(request):
-    template = loader.get_template('chingo/check_test.html')
+    template = loader.get_template('chingo/test_check.html')
     context = {"wrong": True}
     return HttpResponse(template.render(context, request))
 
@@ -61,7 +63,7 @@ def word_add_view(request, list_id):
         if form.is_valid():
             new_word = form.save()
             word_list.words.add(new_word)
-            game.score_word(request.user)
+            game.score_word(request.user, new_word)
     response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
     return response
 
@@ -71,8 +73,8 @@ def list_add_view(request):
         if form.is_valid():
             new_list = form.save()
             game.score_list(request.user, new_list)
-    response = redirect(reverse('chingo:list', kwargs={'list_id':new_list.id}))
-    return response
+            return redirect(reverse('chingo:list', kwargs={'list_id':new_list.id}))
+    return redirect(reverse('chingo:index'))
 
 def word_remove_view(request, list_id, word_id):
     if request.method == "POST":
@@ -102,3 +104,9 @@ def word_edit_view(request, list_id):
             form.save()
     response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
     return response
+
+def word_suggest_view(request):
+    if request.method == "POST":
+        wordform = WordForm(request.POST)
+        suggestions = game.word_suggestions(wordform.data)
+        return JsonResponse(suggestions, safe=False)
