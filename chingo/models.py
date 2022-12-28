@@ -132,7 +132,9 @@ class WordList(models.Model):
 	image = models.TextField(
 		verbose_name = _('image'),
 		max_length=500, 
-		default = ''
+		default = '',
+		blank = True,
+		null = True
 		)
 	class Meta:
 		verbose_name = _("word list")
