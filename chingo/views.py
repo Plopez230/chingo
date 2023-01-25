@@ -5,6 +5,7 @@ from django.core import serializers
 from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
+from django.views.decorators.http import require_http_methods
 from .models import *
 from .forms import *
 from . import chingo_game as game
@@ -67,14 +68,21 @@ def word_add_view(request, list_id):
     response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
     return response
 
+@require_http_methods(["POST"])
 def list_add_view(request):
-    if request.method == "POST":
-        form = WordListForm(request.POST)
-        if form.is_valid():
-            new_list = form.save()
-            game.score_list(request.user, new_list)
-            return redirect(reverse('chingo:list', kwargs={'list_id':new_list.id}))
-    return redirect(reverse('chingo:index'))
+    template = loader.get_template('chingo/index.html')
+    form = WordListForm(request.POST)
+    if form.is_valid():
+        new_list = form.save()
+        game.score_list(request.user, new_list)
+        return redirect(reverse('chingo:list', kwargs={'list_id':new_list.id}))
+    context = {
+        'lists': WordList.objects.all(),
+        'user': request.user,
+        'list_form': form,
+        }
+    return HttpResponse(template.render(context, request))
+
 
 def word_remove_view(request, list_id, word_id):
     if request.method == "POST":

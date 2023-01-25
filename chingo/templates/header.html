@@ -61,7 +61,7 @@
 </nav>
 {% if user.is_authenticated %}
 <!-- Modal -->
-<div class="modal fade" id="create-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade hide" id="create-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -78,20 +78,23 @@
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" name="name"
-                                        placeholder="{% translate 'name' %}">
+                                        placeholder="{% translate 'name' %}" value="{{ list_form.name.value }}">
                                 </div>
+                                {{ list_form.name.errors }}
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <textarea class="form-control" rows="3" name="description"
-                                        placeholder="{% translate 'description' %}"></textarea>
+                                        placeholder="{% translate 'description' %}">{{ list_form.description.value }}</textarea>
                                 </div>
+                                {{ list_form.description.errors }}
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <textarea class="form-control" rows="2" name="image"
-                                        placeholder="{% translate 'image url' %}"></textarea>
+                                        placeholder="{% translate 'image url' %}">{{ list_form.image.value }}</textarea>
                                 </div>
+                                {{ list_form.image.errors }}
                             </div>
                         </div>
                     </div>
@@ -105,4 +108,5 @@
         </div>
     </div>
 </div>
+
 {% endif %} 
