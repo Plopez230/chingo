@@ -49,24 +49,31 @@ def test_check_view(request):
     context = {"wrong": True}
     return HttpResponse(template.render(context, request))
 
+@require_http_methods(["POST"])
 def word_add_from_database_view(request, list_id, word_id):
-    if request.method == "POST":
-        word = get_object_or_404(Word, id=word_id)
-        list = get_object_or_404(WordList, id=list_id)
-        list.words.add(word)
+    word = get_object_or_404(Word, id=word_id)
+    list = get_object_or_404(WordList, id=list_id)
+    list.words.add(word)
     response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
     return response
 
+@require_http_methods(["POST"])
 def word_add_view(request, list_id):
+    template = loader.get_template('chingo/list.html')
     word_list = get_object_or_404(WordList, pk=list_id)
-    if request.method == "POST":
-        form = WordForm(request.POST)
-        if form.is_valid():
-            new_word = form.save()
-            word_list.words.add(new_word)
-            game.score_word(request.user, new_word)
-    response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
-    return response
+    form = WordForm(request.POST)
+    if form.is_valid():
+        new_word = form.save()
+        word_list.words.add(new_word)
+        game.score_word(request.user, new_word)
+        return redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
+    context = {
+        'list': word_list,
+        'parts_of_speech': Word.PartOfSpeech.choices,
+        'words': Word.objects.all(),
+        'word_add_form': form
+    }
+    return HttpResponse(template.render(context, request))
 
 @require_http_methods(["POST"])
 def list_add_view(request):
@@ -83,38 +90,52 @@ def list_add_view(request):
         }
     return HttpResponse(template.render(context, request))
 
-
+@require_http_methods(["POST"])
 def word_remove_view(request, list_id, word_id):
-    if request.method == "POST":
-        word = get_object_or_404(Word, id=word_id)
-        list = get_object_or_404(WordList, id=list_id)
-        if list.words.contains(word):
-            list.words.remove(word)
+    word = get_object_or_404(Word, id=word_id)
+    list = get_object_or_404(WordList, id=list_id)
+    if list.words.contains(word):
+        list.words.remove(word)
     response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
     return response
 
+@require_http_methods(["POST"])
 def list_edit_view(request, list_id):
+    template = loader.get_template('chingo/list.html')
     word_list = get_object_or_404(WordList, pk=list_id)
-    if request.method == "POST":
-        form = WordListForm(request.POST, instance=word_list)
-        if form.is_valid():
-            new_word = form.save()
-    response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
-    return response
+    form = WordListForm(request.POST, instance=word_list)
+    if form.is_valid():
+        new_word = form.save()
+        return redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
+    context = {
+        'list': word_list,
+        'parts_of_speech': Word.PartOfSpeech.choices,
+        'words': Word.objects.all(),
+        'list_edit_form': form
+    }
+    return HttpResponse(template.render(context, request))
 
+@require_http_methods(["POST"])
 def word_edit_view(request, list_id):
-    if request.method == "POST":
-        word_list = get_object_or_404(WordList, pk=list_id)
-        word_id = request.POST.get("word_id")
-        word = get_object_or_404(Word, pk=word_id)
-        form = WordForm(request.POST, instance=word)
-        if form.is_valid():
-            form.save()
-    response = redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
-    return response
+    template = loader.get_template('chingo/list.html')
+    word_list = get_object_or_404(WordList, pk=list_id)
+    word_id = request.POST.get("word_id")
+    word = get_object_or_404(Word, pk=word_id)
+    form = WordForm(request.POST, instance=word)
+    if form.is_valid():
+        form.save()
+        return redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
+    context = {
+        'list': word_list,
+        'parts_of_speech': Word.PartOfSpeech.choices,
+        'words': Word.objects.all(),
+        'word_edit_form': form,
+        'word_id': word_id
+    }
+    return HttpResponse(template.render(context, request))
 
+@require_http_methods(["POST"])
 def word_suggest_view(request):
-    if request.method == "POST":
-        wordform = WordForm(request.POST)
-        suggestions = game.word_suggestions(wordform.data)
-        return JsonResponse(suggestions, safe=False)
+    wordform = WordForm(request.POST)
+    suggestions = game.word_suggestions(wordform.data)
+    return JsonResponse(suggestions, safe=False)

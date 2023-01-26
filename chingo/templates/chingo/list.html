@@ -27,21 +27,21 @@
                   <input type="text" class="form-control" name="name" placeholder="{% translate 'name' %}"
                     value="{{ list.name }}">
                 </div>
+                {{ list_edit_form.name.errors }}
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
                   <textarea class="form-control" name="description" rows="3"
-                    placeholder="{% translate 'description' %}">
-                  {{ list.description }}
-                </textarea>
+                    placeholder="{% translate 'description' %}">{{ list.description }}</textarea>
                 </div>
+                {{ list_edit_form.description.errors }}
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
-                  <textarea class="form-control" name="image" rows="2" placeholder="{% translate 'image url' %}">
-                  {{ list.image }}
-                </textarea>
+                  <textarea class="form-control" name="image" rows="2" 
+                  placeholder="{% translate 'image url' %}">{{ list.image }}</textarea>
                 </div>
+                {{ list_edit_form.image.errors }}
               </div>
             </div>
           </div>
@@ -74,12 +74,14 @@
                 <div class="col-sm-12">
                   <input type="text" class="form-control" name="simplified" id="add_simplified" oninput="suggest_words()"
                     placeholder="{% translate 'simplified word' %}">
+                {{ word_add_form.simplified.errors }}
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
                   <input type="text" class="form-control" name="pinyin" id="add_pinyin" oninput="suggest_words()"
                     placeholder="{% translate 'pinyin' %}">
+                    {{ word_add_form.pinyin.errors }}
                 </div>
               </div>
               <div class="form-group row">
@@ -99,18 +101,21 @@
                 <div class="col-sm-12">
                   <input type="text" class="form-control" name="traditional" id="add_traditional"  oninput="suggest_words()"
                     placeholder="{% translate 'traditional word' %}">
+                    {{ word_add_form.traditional.errors }}
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
                   <input type="text" class="form-control" name="translation" id="add_translation" oninput="suggest_words()"
                     placeholder="{% translate 'translation' %}">
+                    {{ word_add_form.translation.errors }}
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-sm-12">
                   <input type="text" class="form-control" name="classifier" id="add_classifiers" oninput="suggest_words()"
                     placeholder="{% translate 'classifiers' %}">
+                    {{ word_add_form.classifier.errors }}
                 </div>
               </div>
             </div>
@@ -150,7 +155,7 @@
     <div class="modal-content">
       <form method="post" action="{% url 'chingo:word_edit' list_id=list.id%}">
         {% csrf_token %}
-        <input type="hidden" name="word_id" id="edit_id" value="">
+        <input type="hidden" name="word_id" id="edit_id" value="{{ word_id }}">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             {% translate "Edit word" %}
@@ -166,13 +171,15 @@
                 <div class="form-group row">
                   <div class="col-sm-12">
                     <input type="text" class="form-control" name="simplified" id="edit_simplified"
-                      placeholder="{% translate 'simplified word' %}">
+                      placeholder="{% translate 'simplified word' %}" value="{{ word_edit_form.simplified.value }}">
+                      {{ word_edit_form.simplified.errors }}
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-12">
                     <input type="text" class="form-control" name="pinyin" id="edit_pinyin"
-                      placeholder="{% translate 'pinyin' %}">
+                      placeholder="{% translate 'pinyin' %}" value="{{ word_edit_form.pinyin.value }}">
+                      {{ word_edit_form.pinyin.errors }}
                   </div>
                 </div>
                 <div class="form-group row">
@@ -191,19 +198,22 @@
                 <div class="form-group row">
                   <div class="col-sm-12">
                     <input type="text" class="form-control" name="traditional" id="edit_traditional"
-                      placeholder="{% translate 'traditional word' %}">
+                      placeholder="{% translate 'traditional word' %}" value="{{ word_edit_form.traditional.value }}">
+                      {{ word_edit_form.traditional.errors }}
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-12">
                     <input type="text" class="form-control" name="translation" id="edit_translation"
-                      placeholder="{% translate 'translation' %}">
+                      placeholder="{% translate 'translation' %}" value="{{ word_edit_form.translation.value }}">
+                      {{ word_edit_form.translation.errors }}
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-12">
                     <input type="text" class="form-control" name="classifier" id="edit_classifiers"
-                      placeholder="{% translate 'classifiers' %}">
+                      placeholder="{% translate 'classifiers' %}" value="{{ word_edit_form.classifier.value }}">
+                      {{ word_edit_form.classifier.errors }}
                   </div>
                 </div>
               </div>
@@ -323,5 +333,14 @@
 {% endblock %}
 
 {% block scripts %}
+{% if list_edit_form %}
+<script>$('#edit-description').modal('show'); </script>
+{% endif %}
+{% if word_add_form %}
+<script>$('#add-word').modal('show'); </script>
+{% endif %}
+{% if word_edit_form %}
+<script>$('#edit-word').modal('show'); </script>
+{% endif %}
 <script src="{% static 'dist/js/list.js'%}"></script>
 {% endblock %}
