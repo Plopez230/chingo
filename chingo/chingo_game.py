@@ -16,10 +16,6 @@ def score_list(user, wordlist):
     wordlist.save()
     user.save()
 
-def score_test(user):
-    user.tests_passed += 1
-    user.save()
-
 def search_words(keyword):
     if not keyword or keyword == "":
         return []
@@ -40,99 +36,122 @@ def search_lists(keyword):
         )
     return queryset
 
-
 def word_suggestions(keywords):
-    kw = {}
-    for k, v in keywords.items():
-        if v == '':
-            kw[k] = 'No keyword provided'
-        else:
-            kw[k] = v
+    simplified_q = traditional_q = pinyin_q = Q(pk=None)
+    translation_q = part_of_speech_q = classifier_q = Q(pk=None)
+    if keywords['simplified']:
+        simplified_q = Q(simplified__icontains=keywords['simplified'])
+    if keywords['traditional']:
+        traditional_q = Q(traditional__icontains=keywords['traditional'])
+    if keywords['pinyin']:
+        pinyin_q = Q(pinyin__icontains=keywords['pinyin'])
+    if keywords['translation']:
+        translation_q = Q(translation__icontains=keywords['translation'])
+    if keywords['part_of_speech']:
+        part_of_speech_q = Q(part_of_speech__exact=keywords['part_of_speech'])
+    if keywords['classifier']:
+        classifier_q = Q(classifier__icontains=keywords['classifier'])
     suggestions = Word.objects.filter(
-        Q(simplified__icontains=kw['simplified'])
-        | Q(traditional__icontains=kw['traditional'])
-        | Q(pinyin__icontains=kw['pinyin'])
-        | Q(translation__icontains=kw['translation'])
-        | Q(part_of_speech__exact=kw['part_of_speech'])
-        | Q(classifier__icontains=kw['classifier'])
+        simplified_q | traditional_q | pinyin_q 
+        | translation_q | part_of_speech_q | classifier_q
     )
     return [{'label':str(word) , 'id':word.id} for word in suggestions]
 
-game_config = {
-    'words': [],
-    'game_modes': [],
-    'number_of_options': 5
+def game_init(request, game_config):
+    list_id = game_config.get('list_id', '')
+    wordlist = get_object_or_404(WordList, id=list_id)
+    questions = [word.id for word in wordlist.words.all()]
+    random.shuffle(questions)
+    request.session['game'] = questions
+    request.session['game_config'] = game_config
+
+game_modes = {
+    'simplified_translation': ('s', 't'),
+    'simplified_pinyin': ('s', 'p'),
+    'pinyin_translation': ('p', 't'),
+    'pinyin_simplified': ('p', 's'),
+    'translation_simplified': ('t', 's'),
+    'translation_pinyin': ('t', 'p')
 }
 
-test = {
-    'question': {
-        'word': 0,
-        'label': '',
-    },
-    'options': []
-}
+def get_game_mode(request):
+    game_config = request.session['game_config']
+    selected_modes = [
+        key for key, value in game_config.items() if (value == True and not key == 'list_id')
+    ]
+    if selected_modes:
+        game_mode = random.choice(selected_modes)
+    else:
+        game_mode = random.choice(list(game_modes.items()))[0]
+    return game_modes[game_mode]
 
+def get_word_label(word, mode):
+    if mode == 's':
+        return word.simplified
+    if mode == 'p':
+        return word.pinyin
+    if mode == 't':
+        return word.translation
 
-def timestamp_question(user, word):
-    if user.is_authenticated():
-        score = Score.objects.filter(
-            Q()
-        ) 
+def get_answers(word, wordlist, options):
+    queryset = wordlist.words.exclude(
+        Q(id__exact=word.id)
+        | Q(translation__icontains=word.translation)
+        | Q(pinyin__icontains=word.pinyin)
+        ).order_by('?')[:options-1]
+    answers = list(queryset)
+    answers.append(word)
+    random.shuffle(answers)
+    return answers
 
-def timestamp_answer(user, word):
-    if user.is_authenticated():
-        pass 
-
-def get_option_list(word, max_options=5):
-    if max_options < 2:
-        max_options = 2
-    queryset = Word.objects.filter(
-        ~Q(simplified__icontains=word.simplified)
-        & ~Q(pinyin__icontains=word.pinyin)
-    ).order_by("?")[0:max_options - 1]
-    options = list(queryset)
-    options.append(word)
-    random.shuffle(options)
-    return options 
-
-class GameModes(Enum):
-    SIMP_PINY = 1
-    SIMP_TRAN = 2
-    PINY_SIMP = 3
-    PINY_TRAN = 4
-    TRAN_SIMP = 5
-    TRAN_PINY = 6
-
-def get_game_mode(game_config):
-    modes = game_config.get('game_modes', None)
-    if not modes or not isinstance(modes, list) or len(modes) == 0:
-        modes = [game_mode.value for game_modes in GameModes]
-    random.shuffle(modes)
-    return modes[0]
-
-def get_next_word(game_config):
-    words = game_config.get('words', None)
-    word = None
-    if words and isinstance(words, list) and len(words) > 0:
-        word = words[0]
-        words.pop(0)
-    return word
-
-def generate_test(user, game_config):
-    question = get_next_word(game_config)
-    mode = get_game_mode(game_config)
-    options = get_option_list(question)
-    timestamp_question(user, question)
-    test = {
-        'question': question, 'mode': mode, 'options': options
+def next_question(request):
+    question_id = request.session['game'][0]
+    list_id = request.session['game_config']['list_id']
+    question = get_object_or_404(Word, id=question_id)
+    score, created = Score.objects.get_or_create(
+        player=request.user,
+        word=question,
+    )
+    score.shown += 1
+    score.save()
+    word_list = get_object_or_404(WordList, id=list_id)
+    option_c = request.session['game_config'].get('options','')
+    game_mode = get_game_mode(request)
+    question = {
+        'word': question,
+        'label': get_word_label(question, game_mode[0]),
+        'answers': [
+            {'label': get_word_label(answer, game_mode[1]), 'word': answer} 
+            for answer in get_answers(question, word_list, option_c)
+            ]
     }
-    return test
+    return question
 
-def check_test(user, game_config, question, option):
-    pass
-    #()read game_config
-    #()check the answer from post parameters
-    #(Authenticated)checks answer timestamp:
-    #(Authenticated)    save results
-    #(Authenticated)else:
-    #(Authenticated)    +1000 points?
+def score_test(request, question, grade):
+    question = get_object_or_404(Word, id=question)
+    score = question.scores.filter(player=request.user)[0]
+    
+    if grade=='correct':
+        score.correct += 1
+        request.user.tests_passed += 1
+    else:
+        score.wrong += 1
+    score.save()
+    request.user.save()
+
+def check(request, question, answer):
+    question = int(request.POST.get('question_id', -1))
+    answer = int(request.POST.get('answer_id', -1))
+    expected = request.session['game'][0]
+    if question != expected:
+        return 'cheat'
+    if question != answer:
+        grade = 'wrong'
+    else:
+        grade = 'correct'
+    score_test(request, question, grade)
+    new_list = request.session['game']
+    del new_list[0]
+    request.session['game'] = new_list
+    return grade
+    

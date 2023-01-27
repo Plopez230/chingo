@@ -40,13 +40,39 @@ def list_view(request, list_id):
     return HttpResponse(template.render(context, request))
 
 def test_view(request):
+    if not request.session['game']:
+        return redirect(reverse('chingo:index'))
     template = loader.get_template('chingo/test.html')
-    context = {}
+    question = game.next_question(request)
+    score = question['word'].scores.filter(player=request.user)[0]
+    context = {
+        'question': question,
+        'score': score
+    }
     return HttpResponse(template.render(context, request))
 
+@require_http_methods(["POST"])
+def practice(request):
+    config_form = GameConfigForm(request.POST)
+    print(request.POST.keys())
+    config_form.is_valid()
+    game.game_init(request, config_form.cleaned_data)
+    return redirect(reverse('chingo:test'))
+
+@require_http_methods(["POST"])
 def test_check_view(request):
     template = loader.get_template('chingo/test_check.html')
-    context = {"wrong": True}
+    question_id = request.POST.get('question_id', -1)
+    question = get_object_or_404(Word, id=question_id)
+    answer_id = request.POST.get('answer_id', -1)
+    answer = get_object_or_404(Word, id=answer_id)
+    grade = game.check(request, question, answer)
+    context = {
+        'grade': grade,
+        'question': question,
+        'answer': answer,
+        'score': question.scores.filter(player=request.user)[0]
+        }
     return HttpResponse(template.render(context, request))
 
 @require_http_methods(["POST"])

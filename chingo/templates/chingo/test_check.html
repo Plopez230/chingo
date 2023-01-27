@@ -1,30 +1,54 @@
 {% extends "base_generic.html" %}
 {% load i18n %}
 {% block title %}
-{% translate "Check your choice" %}
+
 {% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
+<!-- Cheat modal -->
+<div class="modal fade" id="cheat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            {% translate "It seems you are trying to cheat" %}
+          </h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <div class="col-sm-12"><button data-dismiss="modal" class="btn btn-info float-right">
+                {% translate "Don't care" %}
+              </button></div>
+          </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+{% endif %}
+<!--  -->
 <div class="row">
 
 
   <div class="col-md-6">
 
     <div class="card card-widget widget-user">
-
-      {% if wrong %}
+      {% if grade in "wrong" %}
       <div class="widget-user-header bg-danger">
         {% else %}
         <div class="widget-user-header bg-success">
           {% endif %}
           <h1 class="widget-user-username"><br></h1>
-          <h1 class="widget-user-desc">huā 花</h1>
+          <h1 class="widget-user-desc">{{ question }}</h1>
         </div>
         <div class="card-footer">
-
-          <button type="button" class="btn btn-info btn-block btn-flat">
-            <h3>Next question</h3>
-          </button>
+          <a href="{% url 'chingo:test' %}">
+            <button type="button" class="btn btn-info btn-block btn-flat">
+              <h3>Next question</h3>
+            </button>
+          </a>
 
         </div>
       </div>
@@ -32,54 +56,61 @@
     </div>
 
 
-    <div class="col-md-6">
-      
+    <div class="col-md-6"> 
+      {% if user.is_authenticated %}
+      {% if score %}
       <div class="card card-widget">
-
         <div class="card-footer">
-          <h5>Your statistics</h5>
+          <h5>{% translate "Your statistics" %}</h5>
           <div class="row">
             <div class="col-sm-4 border-right">
               <div class="description-block">
-                <h5 class="description-header">3,200</h5>
-                <span class="description-text">number of times wrong</span>
+                <h5 class="description-header">{{ score.wrong }}</h5>
+                <span class="description-text">{% translate "number of times wrong" %}</span>
               </div>
-
             </div>
-
             <div class="col-sm-4 border-right">
               <div class="description-block">
-                <h5 class="description-header">13,000</h5>
-                <span class="description-text">number of times shown</span>
+                <h5 class="description-header">{{ score.shown }}</h5>
+                <span class="description-text">{% translate "number of times shown" %}</span>
               </div>
-
             </div>
-
             <div class="col-sm-4">
               <div class="description-block">
-                <h5 class="description-header">35</h5>
-                <span class="description-text">number of times correct</span>
+                <h5 class="description-header">{{ score.correct }}</h5>
+                <span class="description-text">{% translate "number of times correct" %}</span>
               </div>
-
             </div>
-
           </div>
-
+        </div>
+      </div>  
+      {% else %}
+      <div class="card card-widget">
+        <div class="card-footer">
+          <h5>{% translate "Your statistics" %}</h5>
+          <div class="row">
+            <p>{% translate "No data yet" %}</p>
+          </div>
         </div>
       </div>
-{% if wrong %}
-      <div class="callout callout-danger">
-        <h5>I am a danger callout!</h5>
-        <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire
-          soul,
-          like these sweet mornings of spring which I enjoy with my whole heart.</p>
-      </div>
+      {% endif %}
       {% else %}
-      <div class="callout callout-success">
-        <h5>Congratulations!</h5>
+      <div class="card card-widget">
+        <div class="card-footer">
+          <h5>{% translate "Your statistics" %}</h5>
+          <div class="row">
+            <p>{% translate "Log in to see your data" %}</p>
+          </div>
+        </div>
       </div>
       {% endif %}
     </div>
 
   </div>
   {% endblock %}
+
+{% block scripts %}
+{% if grade in "cheat" %}
+<script>$('#cheat').modal('show'); </script>
+{% endif %}
+{% endblock %}

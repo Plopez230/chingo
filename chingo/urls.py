@@ -14,6 +14,7 @@ urlpatterns = [
 	path('list/add/', views.list_add_view, name='list_add'),
 	path('search/', views.search_view, name='search'),
 	path('suggest/', views.word_suggest_view, name='word_suggest'),
+	path('practice/', views.practice, name='practice'),
 	path('test/', views.test_view, name='test'),
 	path('check_test/', views.test_check_view, name='test_check'),
 	path('', views.index_view, name='index'),

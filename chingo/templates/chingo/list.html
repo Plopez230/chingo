@@ -155,7 +155,7 @@
     <div class="modal-content">
       <form method="post" action="{% url 'chingo:word_edit' list_id=list.id%}">
         {% csrf_token %}
-        <input type="hidden" name="word_id" id="edit_id" value="{{ word_id }}">
+        <input type="hidden" name="word_id" value="{{ word_id }}">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             {% translate "Edit word" %}
@@ -233,6 +233,71 @@
   </div>
 </div>
 {% endif %}
+<!-- Game config modal -->
+<div class="modal fade" id="game_config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            {% translate "Edit list" %}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12">
+
+              <form action="{% url 'chingo:practice' %}" method="post">
+                {% csrf_token %}
+
+                <input type="hidden" name="list_id" value="{{ list.id }}">
+
+                <div class="form-group">
+                  <input type="number" name="options" class="form-control" placeholder="{% translate 'Number of options' %}">
+                  </div>
+                  <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="simplified_pinyin" name="simplified_pinyin" value="simplified_pinyin">
+                  <label for="simplified_pinyin" class="custom-control-label">{% translate "Simplified -> Pinyin" %}</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="simplified_translation" name="simplified_translation" value="simplified_translation">
+                  <label for="simplified_translation" class="custom-control-label">{% translate "Simplified -> Translation" %}</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="pinyin_simplified" name="pinyin_simplified" value="pinyin_simplified">
+                  <label for="pinyin_simplified" class="custom-control-label">{% translate "Pinyin -> Simplified" %}</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="pinyin_translation" name="pinyin_translation" value="pinyin_translation">
+                  <label for="pinyin_translation" class="custom-control-label">{% translate "Pinyin -> Translation" %}</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="translation_simplified" name="translation_simplified" value="translation_simplified">
+                  <label for="translation_simplified" class="custom-control-label">{% translate "Translation -> Simplified" %}</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="translation_pinyin" name="translation_pinyin" value="translation_pinyin">
+                  <label for="translation_pinyin" class="custom-control-label">{% translate "Translation -> Pinyin" %}</label>
+                </div></div>
+
+                  <button type="submit" class="btn btn-info btn-block btn-flat">
+                    {% translate "Practice with this list" %}</button>
+                </form>
+
+            </div>
+          </div>
+
+        </div>
+
+    </div>
+  </div>
+</div>
 <!-- Description widget -->
 <div class="row">
   <div class="col-md-12 col-lg-6 col-xl-4">
@@ -249,8 +314,11 @@
       <p></p>
       <div class="row">
         <div class="col-md-12 col-lg-6 col-xl-4" style="padding:7.5px !important;">
-          <a href="{% url 'chingo:test' %}"><button type="button" class="btn btn-info btn-block btn-flat">
-              {% translate "Practice with this list" %}</button></a>
+          
+          <button type="submit" class="btn btn-info btn-block btn-flat" data-toggle="modal"
+          data-target="#game_config">
+              {% translate "Practice with this list" %}</button>
+
         </div>
         {% if user.is_authenticated %}
         <div class="col-md-12 col-lg-6 col-xl-4" style="padding:7.5px !important;">
