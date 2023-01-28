@@ -10,6 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
 from .forms import *
+from .utils import split_columns
 from . import chingo_game as game
 from .pinyin_marker import mark_text
 
@@ -20,8 +21,10 @@ def index_view(request):
     worst_scores = None
     if request.user.is_authenticated:
         worst_scores = Score.objects.filter(player=request.user).order_by('-wrong')[:6]
+    ws = WordList.objects.all()
+    
     context = {
-        'lists': WordList.objects.all(),
+        'lists': split_columns(ws),
         'user': request.user,
         'worst_scores': worst_scores,
         }

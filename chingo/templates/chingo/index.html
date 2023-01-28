@@ -73,10 +73,11 @@
       <h3>{% translate "Latest lists of words" %}</h3>
     </div>
   </div>
-  <div class="row">
-    {% for list in lists %}
-    <div class="col-md-12 col-lg-6 col-xl-4">
-      <div class="card mb-2 bg-gradient-dark">
+  <div class="row mb-2">
+    {% for ls in lists %}
+    <div class="col-md-12 col-lg-4 col-xl-4 mb-2">
+      {% for list in ls %}
+      <div class="card mb-2 bg-gradient-dark" style="margin-bottom: 15px !important;">
         <img class="card-img-top" src="{{ list.image }}" onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" style="filter:brightness(70%)">
         <div class="card-img-overlay d-flex flex-column justify-content-end">
           <h5 class="card-title text-primary text-white"><a href="{% url 'chingo:list' list_id=list.id %}"
@@ -86,9 +87,9 @@
           <a href="{% url 'chingo:list' list_id=list.id %}" class="text-white">{{ list.owner.username }}.
             {{ list.creation_date }}</a>
         </div>
-      </div>
-    </div>
-    {% endfor %}
+      </div>{% endfor %}
+    </div>{% endfor %}
+    
   </div>
 </div>
 {% endblock %}
