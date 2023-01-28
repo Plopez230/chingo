@@ -108,12 +108,13 @@ def next_question(request):
     question_id = request.session['game'][0]
     list_id = request.session['game_config']['list_id']
     question = get_object_or_404(Word, id=question_id)
-    score, created = Score.objects.get_or_create(
-        player=request.user,
-        word=question,
-    )
-    score.shown += 1
-    score.save()
+    if request.user.is_authenticated:
+        score, created = Score.objects.get_or_create(
+            player=request.user,
+            word=question,
+        )
+        score.shown += 1
+        score.save()
     word_list = get_object_or_404(WordList, id=list_id)
     option_c = request.session['game_config'].get('options','')
     game_mode = get_game_mode(request)
@@ -129,15 +130,15 @@ def next_question(request):
 
 def score_test(request, question, grade):
     question = get_object_or_404(Word, id=question)
-    score = question.scores.filter(player=request.user)[0]
-    
-    if grade=='correct':
-        score.correct += 1
-        request.user.tests_passed += 1
-    else:
-        score.wrong += 1
-    score.save()
-    request.user.save()
+    if request.user.is_authenticated:
+        score = question.scores.filter(player=request.user)[0]
+        if grade=='correct':
+            score.correct += 1
+            request.user.tests_passed += 1
+        else:
+            score.wrong += 1
+        score.save()
+        request.user.save()
 
 def check(request, question, answer):
     question = int(request.POST.get('question_id', -1))
