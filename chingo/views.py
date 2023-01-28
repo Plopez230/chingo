@@ -9,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 from .models import *
 from .forms import *
 from . import chingo_game as game
+from .pinyin_marker import mark_text
 
 # Create your views here.
 def index_view(request):
@@ -22,6 +23,7 @@ def index_view(request):
 def search_view(request):
     template = loader.get_template('chingo/search.html')
     keyword = request.GET.get("keyword")
+    keyword = mark_text(keyword)
     context = {
         'lists': game.search_lists(keyword),
         'words': game.search_words(keyword),

@@ -1,6 +1,7 @@
 from django.forms import ModelForm, IntegerField, BooleanField, Form
 from .models import Word, WordList
 from django.core import validators
+from .pinyin_marker import mark_text
 
 class WordForm(ModelForm):
     class Meta:
@@ -13,6 +14,11 @@ class WordForm(ModelForm):
             'translation',
             'part_of_speech'
             ]
+
+    def clean(self):
+        super().clean()
+        pinyin = self.cleaned_data['pinyin']
+        self.cleaned_data['pinyin'] = mark_text(pinyin)
 
 class WordListForm(ModelForm):
     class Meta:
