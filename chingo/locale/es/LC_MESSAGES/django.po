@@ -1,0 +1,457 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-28 06:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: chingo/models.py:8
+msgid "points"
+msgstr "puntos"
+
+#: chingo/models.py:12 chingo/templates/chingo/index.html:29
+msgid "lists created"
+msgstr "listas creadas"
+
+#: chingo/models.py:16 chingo/templates/chingo/index.html:23
+msgid "words included"
+msgstr "palabras incluidas"
+
+#: chingo/models.py:20 chingo/templates/chingo/index.html:35
+msgid "tests passed"
+msgstr "tests superados"
+
+#: chingo/models.py:24
+msgid "chingo user"
+msgstr "usuario de chingo"
+
+#: chingo/models.py:25
+msgid "chingo users"
+msgstr "usuarios de chingo"
+
+#: chingo/models.py:39
+msgid "newcomer"
+msgstr "recién llegado"
+
+#: chingo/models.py:41
+msgid "apprentice"
+msgstr "aprendiz"
+
+#: chingo/models.py:43
+msgid "nerd"
+msgstr "empollón"
+
+#: chingo/models.py:45
+msgid "master"
+msgstr "maestro"
+
+#: chingo/models.py:47
+msgid "donnish"
+msgstr "erudito"
+
+#: chingo/models.py:51
+msgid "noun"
+msgstr "sustantivo"
+
+#: chingo/models.py:52
+msgid "pronoun"
+msgstr "pronombre"
+
+#: chingo/models.py:53
+msgid "verb"
+msgstr "verbo"
+
+#: chingo/models.py:54
+msgid "adjective"
+msgstr "adjetivo"
+
+#: chingo/models.py:55
+msgid "adverb"
+msgstr "adverbio"
+
+#: chingo/models.py:56
+msgid "number"
+msgstr "número"
+
+#: chingo/models.py:57
+msgid "classifier"
+msgstr "clasificador"
+
+#: chingo/models.py:58
+msgid "interjection"
+msgstr "interjección"
+
+#: chingo/models.py:59
+msgid "onomatopeia"
+msgstr "onomatopeya"
+
+#: chingo/models.py:60
+msgid "conjunction"
+msgstr "conjunción"
+
+#: chingo/models.py:61
+msgid "preposition"
+msgstr "preposición"
+
+#: chingo/models.py:62
+msgid "particle"
+msgstr "partícula"
+
+#: chingo/models.py:65
+msgid "simplified character"
+msgstr "caracter simplificado"
+
+#: chingo/models.py:68
+msgid "traditional character"
+msgstr "caracter tradicional"
+
+#: chingo/models.py:73
+msgid "pinyin transcription"
+msgstr "pinyin"
+
+#: chingo/models.py:76
+msgid "classifiers (if needed)"
+msgstr "clasificadores (si son necesarios)"
+
+#: chingo/models.py:81
+msgid "translated text"
+msgstr "traducción"
+
+#: chingo/models.py:90
+msgid "creator of this character"
+msgstr "creador del caracter"
+
+#: chingo/models.py:95 chingo/models.py:129
+msgid "date of creation"
+msgstr "fecha de creación"
+
+#: chingo/models.py:99
+msgid "character"
+msgstr "palabra"
+
+#: chingo/models.py:100
+msgid "characters"
+msgstr "palabras"
+
+#: chingo/models.py:111
+msgid "name of the list"
+msgstr "nombre de la lista"
+
+#: chingo/models.py:114
+msgid "brief description of the contents of the list"
+msgstr "breve descripción del contenido de la lista"
+
+#: chingo/models.py:119
+msgid "words in this list"
+msgstr "palabras en esta lista"
+
+#: chingo/models.py:120
+msgid "lists"
+msgstr "listas"
+
+#: chingo/models.py:124
+msgid "owner of the list"
+msgstr "dueño de la lista"
+
+#: chingo/models.py:133
+msgid "image"
+msgstr "imagen"
+
+#: chingo/models.py:140
+msgid "word list"
+msgstr "lista de palabras"
+
+#: chingo/models.py:141
+msgid "word lists"
+msgstr "listas de palabras"
+
+#: chingo/models.py:149
+msgid "the word whose score is stored"
+msgstr "la palabra puntuada"
+
+#: chingo/models.py:150 chingo/models.py:157 chingo/models.py:180
+msgid "scores"
+msgstr "puntuaciones"
+
+#: chingo/models.py:156
+msgid "player who scores"
+msgstr "el jugador que puntua"
+
+#: chingo/models.py:162 chingo/templates/chingo/test.html:45
+#: chingo/templates/chingo/test_check.html:75
+msgid "number of times shown"
+msgstr "número de veces mostrada"
+
+#: chingo/models.py:166 chingo/templates/chingo/test.html:51
+#: chingo/templates/chingo/test_check.html:81
+msgid "number of times correct"
+msgstr "número de veces correcta"
+
+#: chingo/models.py:170 chingo/templates/chingo/test.html:39
+#: chingo/templates/chingo/test_check.html:69
+msgid "number of times wrong"
+msgstr "número de veces equivocada"
+
+#: chingo/models.py:174
+msgid "next reminder date"
+msgstr "fecha del próximo recordatorio"
+
+#: chingo/models.py:179
+msgid "score"
+msgstr "puntuacion"
+
+#: chingo/templates/404.html:8
+msgid "Smart!"
+msgstr "¡Inteligente!"
+
+#: chingo/templates/404.html:9
+msgid "You've found a page that doesn't exist"
+msgstr "Has encontrado una página que no existe"
+
+#: chingo/templates/accounts/change_password.html:31
+msgid "Your password can’t be too similar to your other personal information."
+msgstr "Tu contraseña no puede ser similar a tu información personal."
+
+#: chingo/templates/accounts/change_password.html:32
+msgid "Your password must contain at least 8 characters."
+msgstr "Tu contraseña debe contener al menos 8 caracteres."
+
+#: chingo/templates/accounts/change_password.html:33
+msgid "Your password can’t be a commonly used password."
+msgstr "Tu contraseña no puede ser una usada frecuentemente."
+
+#: chingo/templates/accounts/change_password.html:34
+msgid "Your password can’t be entirely numeric."
+msgstr "Tu contraseña no puede contener exclusivamente números."
+
+#: chingo/templates/chingo/index.html:47
+msgid "Your worst results"
+msgstr "Tus peores resultados"
+
+#: chingo/templates/chingo/index.html:57
+msgid "wrong answers"
+msgstr "respuestas equivocadas"
+
+#: chingo/templates/chingo/index.html:64 chingo/templates/chingo/test.html:62
+#: chingo/templates/chingo/test_check.html:92
+msgid "No data yet"
+msgstr "No hay datos aún"
+
+#: chingo/templates/chingo/index.html:73
+msgid "Latest lists of words"
+msgstr "Últimas listas de palabras"
+
+#: chingo/templates/chingo/list.html:16 chingo/templates/chingo/list.html:50
+msgid "Edit list"
+msgstr "Editar lista"
+
+#: chingo/templates/chingo/list.html:27 chingo/templates/header.html:81
+msgid "name"
+msgstr "nombre"
+
+#: chingo/templates/chingo/list.html:35 chingo/templates/header.html:88
+msgid "description"
+msgstr "descripción"
+
+#: chingo/templates/chingo/list.html:42 chingo/templates/header.html:95
+msgid "image url"
+msgstr "url de la imagen"
+
+#: chingo/templates/chingo/list.html:64 chingo/templates/chingo/list.html:345
+msgid "Add word"
+msgstr "añadir palabra"
+
+#: chingo/templates/chingo/list.html:76 chingo/templates/chingo/list.html:174
+msgid "simplified word"
+msgstr "caracter simplificado"
+
+#: chingo/templates/chingo/list.html:83 chingo/templates/chingo/list.html:181
+#: chingo/templates/chingo/list.html:357
+msgid "pinyin"
+msgstr "pinyin"
+
+#: chingo/templates/chingo/list.html:103 chingo/templates/chingo/list.html:201
+msgid "traditional word"
+msgstr "caracter tradicional"
+
+#: chingo/templates/chingo/list.html:110 chingo/templates/chingo/list.html:208
+#: chingo/templates/chingo/list.html:360
+msgid "translation"
+msgstr "traducción"
+
+#: chingo/templates/chingo/list.html:117 chingo/templates/chingo/list.html:215
+msgid "classifiers"
+msgstr "clasificadores"
+
+#: chingo/templates/chingo/list.html:126 chingo/templates/chingo/list.html:224
+msgid "Add new word"
+msgstr "Añadir una nueva palabra"
+
+#: chingo/templates/chingo/list.html:139
+msgid "add a word from the database"
+msgstr "agrega una palabra desde la base de datos"
+
+#: chingo/templates/chingo/list.html:161
+msgid "Edit word"
+msgstr "Editar palabra"
+
+#: chingo/templates/chingo/list.html:245
+msgid "Practice"
+msgstr "Practicar"
+
+#: chingo/templates/chingo/list.html:261
+msgid "Number of options"
+msgstr "Número de opciones"
+
+#: chingo/templates/chingo/list.html:266
+msgid "Simplified -> Pinyin"
+msgstr "Simplificado -> Pinyin"
+
+#: chingo/templates/chingo/list.html:270
+msgid "Simplified -> Translation"
+msgstr "Simplificado -> Traducción"
+
+#: chingo/templates/chingo/list.html:274
+msgid "Pinyin -> Simplified"
+msgstr "Pinyin -> Simplificado"
+
+#: chingo/templates/chingo/list.html:278
+msgid "Pinyin -> Translation"
+msgstr "Pinyin -> Traducción"
+
+#: chingo/templates/chingo/list.html:282
+msgid "Translation -> Simplified"
+msgstr "Traducción -> Simplificado"
+
+#: chingo/templates/chingo/list.html:286
+msgid "Translation -> Pinyin"
+msgstr "Tradicción -> Pinyin"
+
+#: chingo/templates/chingo/list.html:290 chingo/templates/chingo/list.html:320
+msgid "Practice with this list"
+msgstr "Practica con esta lista"
+
+#: chingo/templates/chingo/list.html:326
+msgid "Edit description"
+msgstr "Editar descripción"
+
+#: chingo/templates/chingo/list.html:339
+msgid "Words in this list"
+msgstr "Palabras en esta lista"
+
+#: chingo/templates/chingo/list.html:355
+msgid "simplified"
+msgstr "simplificado"
+
+#: chingo/templates/chingo/list.html:356
+msgid "traditional"
+msgstr "tradicional"
+
+#: chingo/templates/chingo/list.html:358
+msgid "part of speech"
+msgstr "categoría gramatical"
+
+#: chingo/templates/chingo/list.html:359
+msgid "clas."
+msgstr "clas."
+
+#: chingo/templates/chingo/list.html:383
+msgid "Edit"
+msgstr "Editar"
+
+#: chingo/templates/chingo/list.html:387
+msgid "Remove"
+msgstr "Eliminar"
+
+#: chingo/templates/chingo/search.html:12
+msgid "Words matching the keyword"
+msgstr "Palabras que coinciden"
+
+#: chingo/templates/chingo/search.html:27
+msgid "No words found"
+msgstr "No se ha encontrado ninguna palabra"
+
+#: chingo/templates/chingo/search.html:38
+msgid "Lists matching the keyword"
+msgstr "Listas que coinciden"
+
+#: chingo/templates/chingo/search.html:59
+msgid "No lists found"
+msgstr "No se ha encontrado ninguna lista"
+
+#: chingo/templates/chingo/test.html:34 chingo/templates/chingo/test.html:60
+#: chingo/templates/chingo/test.html:70
+#: chingo/templates/chingo/test_check.html:64
+#: chingo/templates/chingo/test_check.html:90
+#: chingo/templates/chingo/test_check.html:100
+msgid "Your statistics"
+msgstr "Tus estadísticas"
+
+#: chingo/templates/chingo/test.html:72
+#: chingo/templates/chingo/test_check.html:102
+msgid "Log in to see your data"
+msgstr "Inicia sesión para ver tus datos"
+
+#: chingo/templates/chingo/test_check.html:16
+msgid "It seems you are trying to cheat"
+msgstr "Parece que intentas hacer trampa"
+
+#: chingo/templates/chingo/test_check.html:22
+msgid "Don't care"
+msgstr "No importa"
+
+#: chingo/templates/header.html:18
+msgid "Home"
+msgstr "Inicio"
+
+#: chingo/templates/header.html:25
+msgid "New list"
+msgstr "Nueva lista"
+
+#: chingo/templates/header.html:31
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: chingo/templates/header.html:38
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: chingo/templates/header.html:46 chingo/templates/login.html:43
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: chingo/templates/header.html:54
+msgid "Search"
+msgstr "Buscar"
+
+#: chingo/templates/header.html:70
+msgid "Create list"
+msgstr "Crear lista"
+
+#: chingo/templates/header.html:103
+msgid "Create new list"
+msgstr "Crear nueva lista"
+
+#: chingo/templates/login.html:17
+msgid "Sign in to start your session"
+msgstr "Regístrate para iniciar tu sesión"
+
+#: chingo/templates/login.html:22
+msgid "username"
+msgstr "nombre de usuario"
+
+#: chingo/templates/login.html:30
+msgid "password"
+msgstr "contraseña"

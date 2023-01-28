@@ -117,7 +117,7 @@ class WordList(models.Model):
 	words = models.ManyToManyField(
 		Word, 
 		verbose_name = _('words in this list'),
-		related_name = _('lists')
+		related_name = 'lists'
 		)
 	owner = models.ForeignKey(
 		ChingoUser,
@@ -147,14 +147,14 @@ class Score(models.Model):
 	word = models.ForeignKey(
 		Word, 
 		verbose_name = _('the word whose score is stored'),
-		related_name = _("scores"),
+		related_name = "scores",
 		on_delete = models.SET_NULL,
 		null = True
 		)
 	player = models.ForeignKey(
 		ChingoUser, 
 		verbose_name = _('player who scores'),
-		related_name = _("scores"),
+		related_name = "scores",
 		on_delete = models.SET_NULL,
 		null = True
 		)
