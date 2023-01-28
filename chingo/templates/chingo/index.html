@@ -41,7 +41,8 @@
   </div>
 </div>
 {% endif %}
-<!-- Latests lists widget -->
+<!-- Worst results widget -->
+{% if request.user.is_authenticated %}
 <div class="container-fluid">
   <h3>{% translate "Your worst results" %}</h3>
   <div class="row">
@@ -64,6 +65,7 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
 <!-- Latests lists widget -->
 <div class="container-fluid">
   <div class="row mb-2">
