@@ -14,9 +14,14 @@ from .pinyin_marker import mark_text
 # Create your views here.
 def index_view(request):
     template = loader.get_template('chingo/index.html')
+
+    worst_scores = None
+    if request.user.is_authenticated:
+        worst_scores = Score.objects.filter(player=request.user).order_by('-wrong')[:6]
     context = {
         'lists': WordList.objects.all(),
         'user': request.user,
+        'worst_scores': worst_scores,
         }
     return HttpResponse(template.render(context, request))
 

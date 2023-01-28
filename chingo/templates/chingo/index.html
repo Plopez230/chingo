@@ -43,9 +43,32 @@
 {% endif %}
 <!-- Latests lists widget -->
 <div class="container-fluid">
+  <h3>{% translate "Your worst results" %}</h3>
+  <div class="row">
+    {% for score in worst_scores %}
+    <div class="col-md-2 col-sm-4">
+      
+      <div class="info-box bg-info">
+        <div class="info-box-content">
+          <span class="info-box-text">{{ score.word.simplified }} {{ score.word.pinyin }}<br>
+            {{ score.word.translation }}
+          </span>
+          <span class="info-box-number">{{ score.wrong }} {% translate "wrong answers" %}</span>
+        </div>
+      </div>
+      
+      
+    </div>
+    {% empty %}
+    <p>{% translate "No data yet" %}</p>
+    {% endfor %}
+  </div>
+</div>
+<!-- Latests lists widget -->
+<div class="container-fluid">
   <div class="row mb-2">
     <div class="col-sm-12">
-      <h2>{% translate "Latest lists of words" %}</h2>
+      <h3>{% translate "Latest lists of words" %}</h3>
     </div>
   </div>
   <div class="row">
