@@ -6,6 +6,8 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
 from .forms import *
 from . import chingo_game as game
@@ -24,6 +26,19 @@ def index_view(request):
         'worst_scores': worst_scores,
         }
     return HttpResponse(template.render(context, request))
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            return redirect(reverse('chingo:index'))
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/change_password.html', {
+        'form': form
+        })
 
 def search_view(request):
     template = loader.get_template('chingo/search.html')
