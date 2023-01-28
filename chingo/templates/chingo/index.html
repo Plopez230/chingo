@@ -52,7 +52,7 @@
     {% for list in lists %}
     <div class="col-md-12 col-lg-6 col-xl-4">
       <div class="card mb-2 bg-gradient-dark">
-        <img class="card-img-top" src="{{ list.image }}" alt="Image not found" onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" style="filter:brightness(70%)">
+        <img class="card-img-top" src="{{ list.image }}" onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" style="filter:brightness(70%)">
         <div class="card-img-overlay d-flex flex-column justify-content-end">
           <h5 class="card-title text-primary text-white"><a href="{% url 'chingo:list' list_id=list.id %}"
               class="text-white">{{ list.name }}</a></h5>
