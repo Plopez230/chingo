@@ -2,6 +2,14 @@
 {% load i18n %}
 {% load static %}
 
+{% block meta %}
+<meta property="og:title" content="{{ list.name }}" />
+<meta property="og:description" content="{{ list.description }}" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="{{ list.image }}" />
+<meta property="og:site_name" content="Chingo" />
+{% endblock %}
+
 {% block content %}
 {% if user.is_authenticated %}
 <!-- Edit list description modal -->
