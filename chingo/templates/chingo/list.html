@@ -163,7 +163,7 @@
     <div class="modal-content">
       <form method="post" action="{% url 'chingo:word_edit' list_id=list.id%}">
         {% csrf_token %}
-        <input type="hidden" name="word_id" value="{{ word_id }}">
+        <input type="hidden" name="word_id" id="edit_id" value="{{ word_id }}">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
             {% translate "Edit word" %}
@@ -229,7 +229,7 @@
             <div class="form-group row">
               <div class="col-sm-12">
                 <button type="submit" class="btn btn-info float-right">
-                  {% translate "Add new word" %}
+                  {% translate "Edit word" %}
                 </button>
               </div>
             </div>
