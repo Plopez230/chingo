@@ -60,6 +60,7 @@ class Word(models.Model):
 		CONJUNCTION = 'CONJ', _('conjunction')
 		PREPOSITION = 'PREP', _('preposition')
 		PARTICLE = 'PART', _('particle')
+		EXPRESSION = 'EXPR', _('expression')
 
 	simplified = models.TextField(
 		verbose_name = _('simplified character')
