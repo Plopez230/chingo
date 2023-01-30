@@ -13,16 +13,15 @@ from .forms import *
 from .utils import split_columns
 from . import chingo_game as game
 from .pinyin_marker import mark_text
+from django.db.models import Count, Sum, Prefetch, Q
 
 # Create your views here.
 def index_view(request):
     template = loader.get_template('chingo/index.html')
-
     worst_scores = None
     if request.user.is_authenticated:
         worst_scores = Score.objects.filter(player=request.user).order_by('-wrong')[:6]
-    ws = WordList.objects.all()
-    
+    ws = WordList.objects.annotate(word_count=Count('words'))
     context = {
         'lists': split_columns(ws),
         'user': request.user,
@@ -47,9 +46,10 @@ def search_view(request):
     template = loader.get_template('chingo/search.html')
     keyword = request.GET.get("keyword")
     keyword = mark_text(keyword)
+    user = request.user
     context = {
         'lists': game.search_lists(keyword),
-        'words': game.search_words(keyword),
+        'words': game.search_words(keyword, user),
         'user': request.user,
         }
     return HttpResponse(template.render(context, request))
@@ -140,7 +140,7 @@ def list_add_view(request):
         game.score_list(request.user, new_list)
         return redirect(reverse('chingo:list', kwargs={'list_id':new_list.id}))
     context = {
-        'lists': WordList.objects.all(),
+        'lists': split_columns(WordList.objects.all()),
         'user': request.user,
         'list_form': form,
         }

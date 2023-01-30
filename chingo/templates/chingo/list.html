@@ -318,7 +318,8 @@
       <h3>{{ list.name }}</h3>
       <p class="card-text pb-1 pt-1">
         {{ list.description }} </p>
-      <p class="card-text pb-1 pt-1">{{ list.owner.username }}. {{ list.creation_date }}</p>
+        <p class="card-text pb-1 pt-1">
+          {{ list.words.count }} {% translate 'words' %}. {{ list.owner.username }}. {{ list.creation_date }}</p>
       <p></p>
       <div class="row">
         <div class="col-md-12 col-lg-6 col-xl-4" style="padding:7.5px !important;">
