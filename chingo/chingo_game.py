@@ -26,9 +26,6 @@ def search_words(keyword, user):
         | Q(pinyin__icontains=keyword)
         | Q(translation__icontains=keyword)
         )
-    if user.is_authenticated:
-        scores = Score.objects.filter(player=user)
-        queryset.prefetch_related('scores', player=user)
     return queryset
 
 def search_lists(keyword):
