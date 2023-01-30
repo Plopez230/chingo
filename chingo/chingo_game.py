@@ -1,4 +1,5 @@
 from .models import *
+from .pinyin_marker import mark_text
 from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404
 from enum import Enum
@@ -16,7 +17,7 @@ def score_list(user, wordlist):
     wordlist.save()
     user.save()
 
-def search_words(keyword):
+def search_words(keyword, user):
     if not keyword or keyword == "":
         return []
     queryset = Word.objects.filter(
@@ -25,6 +26,9 @@ def search_words(keyword):
         | Q(pinyin__icontains=keyword)
         | Q(translation__icontains=keyword)
         )
+    if user.is_authenticated:
+        scores = Score.objects.filter(player=user)
+        queryset.prefetch_related('scores', player=user)
     return queryset
 
 def search_lists(keyword):
@@ -37,24 +41,18 @@ def search_lists(keyword):
     return queryset
 
 def word_suggestions(keywords):
-    simplified_q = traditional_q = pinyin_q = Q(pk=None)
-    translation_q = part_of_speech_q = classifier_q = Q(pk=None)
+    q = Q(pk=None)
     if keywords['simplified']:
-        simplified_q = Q(simplified__icontains=keywords['simplified'])
+        q = q | Q(simplified__icontains=keywords['simplified'])
     if keywords['traditional']:
-        traditional_q = Q(traditional__icontains=keywords['traditional'])
+        q = q | Q(traditional__icontains=keywords['traditional'])
     if keywords['pinyin']:
-        pinyin_q = Q(pinyin__icontains=keywords['pinyin'])
+        q = q | Q(pinyin__icontains=mark_text(keywords['pinyin']))
     if keywords['translation']:
-        translation_q = Q(translation__icontains=keywords['translation'])
-    if keywords['part_of_speech']:
-        part_of_speech_q = Q(part_of_speech__exact=keywords['part_of_speech'])
+        q = q | Q(translation__icontains=keywords['translation'])
     if keywords['classifier']:
-        classifier_q = Q(classifier__icontains=keywords['classifier'])
-    suggestions = Word.objects.filter(
-        simplified_q | traditional_q | pinyin_q 
-        | translation_q | part_of_speech_q | classifier_q
-    )
+        q = q | Q(classifier__icontains=keywords['classifier'])
+    suggestions = Word.objects.filter(q)
     return [{'label':str(word) , 'id':word.id} for word in suggestions]
 
 def game_init(request, game_config):
