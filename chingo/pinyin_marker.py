@@ -1,7 +1,7 @@
 import re
 from .models import Word
 
-tone_mark_order = ['a', 'o', 'e', 'i', 'u', 'ü']
+tone_mark_order = ['a', 'o', 'e']
 tone_marks = {
 	'a': "aāáǎà",
 	'o': "oōóǒò",
@@ -20,6 +20,7 @@ def tone_mark_position(vowels, tone):
 		position = re.search(order, vowels)
 		if position:
 			return position.span()[0]
+	return len(vowels)-1
 		
 def mark_syllable(syllable):
 	print (syllable)
