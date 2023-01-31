@@ -10,7 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import *
 from .forms import *
-from .utils import split_columns
+from .utils import split_columns, sing
 from . import chingo_game as game
 from .pinyin_marker import mark_text
 from django.db.models import Count, Sum, Prefetch, Q
@@ -41,6 +41,15 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
         })
+
+def sing_view(request, word_id):
+    word = get_object_or_404(Word, id=word_id)
+    filename = sing(word)
+    file = None
+    file = open(filename, "rb").read()
+    response = HttpResponse(file, content_type="audio/mpeg")
+    response['Content-Disposition'] = 'attachment; filename=espeak.mp3' 
+    return response
 
 def search_view(request):
     template = loader.get_template('chingo/search.html')

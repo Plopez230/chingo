@@ -18,7 +18,7 @@
 
         <div class="row">
           <div class="col-sm-12">
-            <h5><strong class="text-info">{{ word.simplified }}</strong> {{ word.pinyin }}   </h5> 
+            <h5><strong class="text-info" onclick="new Audio('{% url 'chingo:sing' word_id=word.id %}').play()">{{ word.simplified }}</strong> {{ word.pinyin }}   </h5> 
             <p>{% translate word.get_part_of_speech_display %}. {{ word.translation }} <br>{{ word.creator }}. {{ word.creation_date }}
               <br>{% translate "lists where it appears" %}: {% for list in word.lists.all %}
               <a href="{% url 'chingo:list' list_id=list.id %}">{{ list.name }}</a>

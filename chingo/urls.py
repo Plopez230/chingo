@@ -16,6 +16,7 @@ urlpatterns = [
 	path('suggest/', views.word_suggest_view, name='word_suggest'),
 	path('practice/', views.practice, name='practice'),
 	path('test/', views.test_view, name='test'),
+	path('sing/<int:word_id>/', views.sing_view, name='sing'),
 	path('check_test/', views.test_check_view, name='test_check'),
 	path('password/', views.change_password, name='change_password'),
 	path('', views.index_view, name='index'),

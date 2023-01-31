@@ -398,7 +398,7 @@
           </thead>
           <tbody>
             {% for word in list.words.all %}
-            <tr>
+            <tr onclick="new Audio('{% url 'chingo:sing' word_id=word.id %}').play()">
               <td>{{ word.simplified }}</td>
               <td>{{ word.traditional }}</td>
               <td>{{ word.pinyin }}</td>
