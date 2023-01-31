@@ -265,34 +265,60 @@
 
                 <input type="hidden" name="list_id" value="{{ list.id }}">
 
+                <div class="row">
+                  <div class="col-md-6 col-xs-12">
+                    
                 <div class="form-group">
+                  <label >{% translate 'Number of options' %}</label>
                   <input type="number" name="options" class="form-control" placeholder="{% translate 'Number of options' %}">
                   </div>
-                  <div class="form-group">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="simplified_pinyin" name="simplified_pinyin" value="simplified_pinyin">
-                  <label for="simplified_pinyin" class="custom-control-label">{% translate "Simplified -> Pinyin" %}</label>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="simplified_translation" name="simplified_translation" value="simplified_translation">
-                  <label for="simplified_translation" class="custom-control-label">{% translate "Simplified -> Translation" %}</label>
+                  <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                    <label for="customRange1">{% translate 'Timer' %}</label>
+                    <input type="number" name="timer" class="form-control" placeholder="{% translate 'time in seconds (0 disables the timer)' %}">
+                    </div>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="pinyin_simplified" name="pinyin_simplified" value="pinyin_simplified">
-                  <label for="pinyin_simplified" class="custom-control-label">{% translate "Pinyin -> Simplified" %}</label>
+                </div>
+                <label>{% translate 'Question type' %}</label>
+                <div class="row">
+                  <div class="col-md-4 col-xs-12">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="simplified_pinyin" name="simplified_pinyin" value="simplified_pinyin">
+                        <label for="simplified_pinyin" class="custom-control-label">{% translate "Simplified -> Pinyin" %}</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="simplified_translation" name="simplified_translation" value="simplified_translation">
+                        <label for="simplified_translation" class="custom-control-label">{% translate "Simplified -> Translation" %}</label>
+                        </div>
+                    </div>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="pinyin_translation" name="pinyin_translation" value="pinyin_translation">
-                  <label for="pinyin_translation" class="custom-control-label">{% translate "Pinyin -> Translation" %}</label>
+                  <div class="col-md-4 col-xs-12">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="pinyin_simplified" name="pinyin_simplified" value="pinyin_simplified">
+                        <label for="pinyin_simplified" class="custom-control-label">{% translate "Pinyin -> Simplified" %}</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="pinyin_translation" name="pinyin_translation" value="pinyin_translation">
+                        <label for="pinyin_translation" class="custom-control-label">{% translate "Pinyin -> Translation" %}</label>
+                        </div>
+                    </div>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="translation_simplified" name="translation_simplified" value="translation_simplified">
-                  <label for="translation_simplified" class="custom-control-label">{% translate "Translation -> Simplified" %}</label>
+                  <div class="col-md-4 col-xs-12">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="translation_simplified" name="translation_simplified" value="translation_simplified">
+                        <label for="translation_simplified" class="custom-control-label">{% translate "Translation -> Simplified" %}</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="translation_pinyin" name="translation_pinyin" value="translation_pinyin">
+                        <label for="translation_pinyin" class="custom-control-label">{% translate "Translation -> Pinyin" %}</label>
+                      </div>
+                    </div>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="translation_pinyin" name="translation_pinyin" value="translation_pinyin">
-                  <label for="translation_pinyin" class="custom-control-label">{% translate "Translation -> Pinyin" %}</label>
-                </div></div>
+                </div>
 
                   <button type="submit" class="btn btn-info btn-block btn-flat">
                     {% translate "Practice with this list" %}</button>

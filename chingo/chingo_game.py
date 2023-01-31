@@ -72,7 +72,7 @@ game_modes = {
 def get_game_mode(request):
     game_config = request.session['game_config']
     selected_modes = [
-        key for key, value in game_config.items() if (value == True and not key == 'list_id')
+        key for key, value in game_config.items() if (value == True and not key in ['list_id', 'timer'])
     ]
     if selected_modes:
         game_mode = random.choice(selected_modes)
@@ -121,6 +121,8 @@ def next_question(request):
             for answer in get_answers(question, word_list, option_c)
             ]
     }
+    if request.session['game_config'].get('timer',''):
+        question['timer'] = request.session['game_config'].get('timer','')
     return question
 
 def score_test(request, question, grade):

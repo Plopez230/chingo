@@ -92,7 +92,9 @@ def test_check_view(request):
     question_id = request.POST.get('question_id', -1)
     question = get_object_or_404(Word, id=question_id)
     answer_id = request.POST.get('answer_id', -1)
-    answer = get_object_or_404(Word, id=answer_id)
+    answer = None
+    if (int(answer_id) > 0):
+        answer = get_object_or_404(Word, id=answer_id)
     grade = game.check(request, question, answer)
     score = None
     if request.user.is_authenticated:

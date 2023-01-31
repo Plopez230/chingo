@@ -36,9 +36,9 @@
 
     <div class="card card-widget widget-user">
       {% if grade in "wrong" %}
-      <div class="widget-user-header bg-danger">
+      <div class="widget-user-header bg-danger" style="height: auto !important; min-height: 135px !important;">
         {% else %}
-        <div class="widget-user-header bg-success">
+        <div class="widget-user-header bg-success" style="height: auto !important; min-height: 135px !important;">
           {% endif %}
           <h1 class="widget-user-username"><br></h1>
           <h1 class="widget-user-desc">{{ question }}</h1>

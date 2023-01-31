@@ -33,6 +33,7 @@ class WordListForm(ModelForm):
 class GameConfigForm(Form):
     list_id = IntegerField()
     options = IntegerField()
+    timer = IntegerField(required=False)
     simplified_pinyin = BooleanField(required=False)
     simplified_translation = BooleanField(required=False)
     translation_pinyin = BooleanField(required=False)
@@ -48,4 +49,6 @@ class GameConfigForm(Form):
             options = 4
         if options < 2:
             options = 2
+        if self.cleaned_data['timer'] and self.cleaned_data['timer'] < 0:
+            self.cleaned_data['timer'] = 0
         self.cleaned_data['options'] = options
