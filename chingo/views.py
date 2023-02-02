@@ -18,14 +18,9 @@ from django.db.models import Count, Sum, Prefetch, Q
 # Create your views here.
 def index_view(request):
     template = loader.get_template('chingo/index.html')
-    worst_scores = None
-    if request.user.is_authenticated:
-        worst_scores = Score.objects.filter(player=request.user).order_by('-wrong')[:6]
-    ws = WordList.objects.annotate(word_count=Count('words'))
     context = {
-        'lists': split_columns(ws),
-        'user': request.user,
-        'worst_scores': worst_scores,
+        'lists': split_columns(WordList.objects.with_word_count()),
+        'worst_scores': Score.objects.worst_scores(request.user),
         }
     return HttpResponse(template.render(context, request))
 

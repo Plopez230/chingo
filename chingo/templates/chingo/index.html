@@ -3,15 +3,15 @@
 {% load static %}
 
 {% block content %}
-{% if user.is_authenticated %}
+{% if request.user.is_authenticated %}
 <!-- User rank widget -->
 <div class="row">
   <div class="col-md-12">
     <div class="card card-widget widget-user shadow">
       <div class="widget-user-header bg-info">
-        <h3 class="widget-user-username">{{ user.username }}</h3>
-        <h5 class="widget-user-desc">{{ user.rank }}</h5>
-        <h5 class="widget-user-username">{{ user.stars }} ⭐</h5>
+        <h3 class="widget-user-username">{{ request.user.username }}</h3>
+        <h5 class="widget-user-desc">{{ request.user.rank }}</h5>
+        <h5 class="widget-user-username">{{ request.user.stars }} ⭐</h5>
       </div>
       <div class="widget-user-image">
       </div>
@@ -19,19 +19,19 @@
         <div class="row">
           <div class="col-sm-4 border-right">
             <div class="description-block">
-              <h5 class="description-header">{{ user.words_included }}</h5>
+              <h5 class="description-header">{{ request.user.words_included }}</h5>
               <span class="description-text">{% translate "words included" %}</span>
             </div>
           </div>
           <div class="col-sm-4 border-right">
             <div class="description-block">
-              <h5 class="description-header">{{ user.lists_created }}</h5>
+              <h5 class="description-header">{{ request.user.lists_created }}</h5>
               <span class="description-text">{% translate "lists created" %}</span>
             </div>
           </div>
           <div class="col-sm-4">
             <div class="description-block">
-              <h5 class="description-header">{{ user.tests_passed }}</h5>
+              <h5 class="description-header">{{ request.user.tests_passed }}</h5>
               <span class="description-text">{% translate "tests passed" %}</span>
             </div>
           </div>
@@ -89,7 +89,6 @@
         </div>
       </div>{% endfor %}
     </div>{% endfor %}
-    
-  </div>
+  
 </div>
 {% endblock %}

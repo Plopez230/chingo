@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Count, Sum, Prefetch, Q
 
 # Create your models here.
 class ChingoUser(AbstractUser):
@@ -107,7 +108,14 @@ class Word(models.Model):
 			self.translation
 			)
 
+class WordListManager(models.Manager):
+
+	def with_word_count(self):
+		queryset = self.get_queryset().annotate(word_count=Count('words'))
+		return queryset
+
 class WordList(models.Model):
+	objects = WordListManager()
 	name = models.TextField(
 		verbose_name = _('name of the list')
 		)
@@ -144,7 +152,16 @@ class WordList(models.Model):
 	def __str__(self):
 		return '{} ({})'.format(self.name, self.owner.username)
 
+class ScoreManager(models.Manager):
+
+	def worst_scores(self, user):
+		queryset = self.none()
+		if user.is_authenticated:
+			queryset = self.get_queryset().filter(player=user).order_by('-wrong')
+		return queryset
+
 class Score(models.Model):
+	objects = ScoreManager()
 	word = models.ForeignKey(
 		Word, 
 		verbose_name = _('the word whose score is stored'),
