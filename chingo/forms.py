@@ -58,3 +58,8 @@ class GameConfigForm(Form):
 class TestForm(Form):
     question = ModelChoiceField(queryset=Word.objects.all())
     answer = ModelChoiceField(queryset=Word.objects.all())
+
+    def clean(self):
+        super(TestForm, self).clean()
+        self.cleaned_data['answer'] = self.cleaned_data.get('answer', None)
+

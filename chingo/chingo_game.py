@@ -106,7 +106,7 @@ def check(request, question, answer):
     expected = request.session['game'][0]
     if question.id != expected:
         return 'cheat'
-    if question.id != answer.id:
+    if question.id != getattr(answer, 'id', 0):
         grade = 'wrong'
     else:
         grade = 'correct'
