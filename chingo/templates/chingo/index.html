@@ -49,15 +49,14 @@
     {% for score in worst_scores %}
     <div class="col-md-2 col-sm-4">
       
-      <div class="info-box bg-info">
+      <div class="info-box bg-info" onclick="new Audio('{% url 'chingo:sing' word_id=score.word.id %}').play()">
         <div class="info-box-content">
-          <span class="info-box-text">{{ score.word.simplified }} {{ score.word.pinyin }}<br>
-            {{ score.word.translation }}
-          </span>
-          <span class="info-box-number">{{ score.wrong }} {% translate "wrong answers" %}</span>
+          <div class="text-center">
+            <h5><b>{{ score.word.simplified }}</b></h5>
+            {{ score.word.pinyin }}
+          </div>
         </div>
       </div>
-      
       
     </div>
     {% empty %}

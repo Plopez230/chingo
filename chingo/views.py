@@ -20,7 +20,7 @@ def index_view(request):
     template = loader.get_template('chingo/index.html')
     context = {
         'lists': split_columns(WordList.objects.with_word_count()),
-        'worst_scores': Score.objects.worst_scores(request.user),
+        'worst_scores': Score.objects.worst_scores(request.user)[:6],
         }
     return HttpResponse(template.render(context, request))
 
