@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .pinyin_marker import mark_text
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Count, Sum, Prefetch, Q
+from django.db.models import Count, Q
 
 # Create your models here.
+
 class ChingoUser(AbstractUser):
 	dictionary_points = models.IntegerField(
 		verbose_name = _('points'),
@@ -47,7 +49,54 @@ class ChingoUser(AbstractUser):
 		else:
 			return _('donnish')
 
+
+class WordManager(models.Manager):
+
+	def create(self, *args, **kwargs):
+		new_word = super(WordManager, self).create(*args, **kwargs)
+		print (new_word)
+		new_word.creator.words_included += 1
+		print (new_word.creator)
+		new_word.save()
+		return new_word
+
+	def question_options(self, word, wordlist):
+		queryset = self.get_queryset()
+		if wordlist:
+			queryset = wordlist.words
+		return queryset.exclude(
+			Q(id__exact=word.id)
+			| Q(translation__icontains=word.translation)
+			| Q(pinyin__icontains=word.pinyin)
+        	).order_by('?')
+	
+	def suggestions(self, **kwargs):
+		q = Q(pk=None)
+		if kwargs.get('simplified'):
+			q = q | Q(simplified__icontains=kwargs['simplified'])
+		if kwargs.get('traditional'):
+			q = q | Q(traditional__icontains=kwargs['traditional'])
+		if kwargs.get('pinyin'):
+			q = q | Q(pinyin__icontains=mark_text(kwargs['pinyin']))
+		if kwargs.get('translation'):
+			q = q | Q(translation__icontains=kwargs['translation'])
+		if kwargs.get('classifier'):
+			q = q | Q(classifier__icontains=kwargs['classifier'])
+		return self.get_queryset().filter(q)
+	
+	def search(self, keyword):
+		if not keyword:
+			return self.none()
+		return self.get_queryset().filter(
+			Q(simplified__icontains=keyword)
+			| Q(traditional__icontains=keyword)
+			| Q(pinyin__icontains=keyword)
+			| Q(translation__icontains=keyword)
+			)
+
+
 class Word(models.Model):
+	objects = WordManager()
 	class PartOfSpeech(models.TextChoices):
 		NOUN = 'NOUN', _('noun')
 		PRONOUN = 'PRON', _('pronoun')
@@ -108,11 +157,21 @@ class Word(models.Model):
 			self.translation
 			)
 
+
 class WordListManager(models.Manager):
 
 	def with_word_count(self):
 		queryset = self.get_queryset().annotate(word_count=Count('words'))
 		return queryset
+
+	def search(self, keyword):
+		if not keyword:
+			return self.none()
+		return self.get_queryset().filter(
+			Q(name__icontains=keyword)
+			| Q(description__icontains=keyword)
+			)
+	
 
 class WordList(models.Model):
 	objects = WordListManager()
@@ -152,6 +211,7 @@ class WordList(models.Model):
 	def __str__(self):
 		return '{} ({})'.format(self.name, self.owner.username)
 
+
 class ScoreManager(models.Manager):
 
 	def worst_scores(self, user):
@@ -163,8 +223,9 @@ class ScoreManager(models.Manager):
 	def by_user_and_word(self, user, word):
 		score = None
 		if user.is_authenticated:
-			score, created = self.get_or_create(player=user.id, word=word.id)
+			score, created = self.get_or_create(player=user, word=word)
 		return score
+
 
 class Score(models.Model):
 	objects = ScoreManager()

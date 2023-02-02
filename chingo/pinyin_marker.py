@@ -1,5 +1,4 @@
 import re
-from .models import Word
 
 tone_mark_order = ['a', 'o', 'e']
 tone_marks = {
@@ -36,9 +35,3 @@ def mark_syllable(syllable):
 
 def mark_text(text):
 	return unmarked_word.sub(mark_syllable, text)
-
-def mark_database():
-	words = Word.objects.all()
-	for word in words:
-		word.pinyin = mark_text(word.pinyin)
-		word.save()

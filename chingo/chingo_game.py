@@ -17,41 +17,6 @@ def score_list(user, wordlist):
     wordlist.save()
     user.save()
 
-def search_words(keyword, user):
-    if not keyword or keyword == "":
-        return []
-    queryset = Word.objects.filter(
-        Q(simplified__icontains=keyword)
-        | Q(traditional__icontains=keyword)
-        | Q(pinyin__icontains=keyword)
-        | Q(translation__icontains=keyword)
-        )
-    return queryset
-
-def search_lists(keyword):
-    if not keyword or keyword == "":
-        return []
-    queryset = WordList.objects.filter(
-        Q(name__icontains=keyword)
-        | Q(description__icontains=keyword)
-        )
-    return queryset
-
-def word_suggestions(keywords):
-    q = Q(pk=None)
-    if keywords['simplified']:
-        q = q | Q(simplified__icontains=keywords['simplified'])
-    if keywords['traditional']:
-        q = q | Q(traditional__icontains=keywords['traditional'])
-    if keywords['pinyin']:
-        q = q | Q(pinyin__icontains=mark_text(keywords['pinyin']))
-    if keywords['translation']:
-        q = q | Q(translation__icontains=keywords['translation'])
-    if keywords['classifier']:
-        q = q | Q(classifier__icontains=keywords['classifier'])
-    suggestions = Word.objects.filter(q)
-    return [{'label':str(word) , 'id':word.id} for word in suggestions]
-
 def game_init(request, game_config):
     list_id = game_config.get('list_id', '')
     wordlist = get_object_or_404(WordList, id=list_id)
@@ -89,29 +54,25 @@ def get_word_label(word, mode):
         return word.translation
 
 def get_answers(word, wordlist, options):
-    queryset = wordlist.words.exclude(
-        Q(id__exact=word.id)
-        | Q(translation__icontains=word.translation)
-        | Q(pinyin__icontains=word.pinyin)
-        ).order_by('?')[:options-1]
-    answers = list(queryset)
+    answers = list(Word.objects.question_options(word, wordlist)[:options-1])
     answers.append(word)
     random.shuffle(answers)
     return answers
 
+def has_next_question(request):
+    if request.session['game']:
+        return request.session['game'][0]
+    return 0
+
 def next_question(request):
-    question_id = request.session['game'][0]
     list_id = request.session['game_config']['list_id']
-    question = get_object_or_404(Word, id=question_id)
-    if request.user.is_authenticated:
-        score, created = Score.objects.get_or_create(
-            player=request.user,
-            word=question,
-        )
+    question = get_object_or_404(Word, id=has_next_question(request))
+    word_list = get_object_or_404(WordList, id=list_id)
+    score = Score.objects.by_user_and_word(request.user, question)
+    if score:
         score.shown += 1
         score.save()
-    word_list = get_object_or_404(WordList, id=list_id)
-    option_c = request.session['game_config'].get('options','')
+    option_c = request.session['game_config']['options']
     game_mode = get_game_mode(request)
     question = {
         'word': question,
@@ -121,14 +82,13 @@ def next_question(request):
             for answer in get_answers(question, word_list, option_c)
             ]
     }
-    if request.session['game_config'].get('timer',''):
+    if 'timer' in request.session['game_config']:
         question['timer'] = request.session['game_config'].get('timer','')
     return question
 
 def score_test(request, question, grade):
-    question = get_object_or_404(Word, id=question)
     if request.user.is_authenticated:
-        score = question.scores.filter(player=request.user)[0]
+        score = Score.objects.by_user_and_word(request.user, question)
         if grade=='correct':
             score.correct += 1
             request.user.tests_passed += 1
@@ -137,19 +97,20 @@ def score_test(request, question, grade):
         score.save()
         request.user.save()
 
-def check(request):
-    question = int(request.POST.get('question_id', -1))
-    answer = int(request.POST.get('answer_id', -1))
+def remove_first_question(request):
+    new_list = request.session['game']
+    del new_list[0]
+    request.session['game'] = new_list
+
+def check(request, question, answer):
     expected = request.session['game'][0]
-    if question != expected:
+    if question.id != expected:
         return 'cheat'
-    if question != answer:
+    if question.id != answer.id:
         grade = 'wrong'
     else:
         grade = 'correct'
     score_test(request, question, grade)
-    new_list = request.session['game']
-    del new_list[0]
-    request.session['game'] = new_list
+    remove_first_question(request)
     return grade
     

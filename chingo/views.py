@@ -52,8 +52,8 @@ def search_view(request):
     keyword = mark_text(keyword)
     user = request.user
     context = {
-        'lists': game.search_lists(keyword),
-        'words': game.search_words(keyword, user),
+        'lists': WordList.objects.search(keyword),
+        'words': Word.objects.search(keyword),
         'user': request.user,
         }
     return HttpResponse(template.render(context, request))
@@ -69,7 +69,7 @@ def list_view(request, list_id):
     return HttpResponse(template.render(context, request))
 
 def test_view(request):
-    if not request.session['game']:
+    if not game.has_next_question(request):
         return redirect(reverse('chingo:index'))
     template = loader.get_template('chingo/test.html')
     question = game.next_question(request)
@@ -82,7 +82,6 @@ def test_view(request):
 @require_http_methods(["POST"])
 def practice(request):
     config_form = GameConfigForm(request.POST)
-    print(request.POST.keys())
     config_form.is_valid()
     game.game_init(request, config_form.cleaned_data)
     return redirect(reverse('chingo:test'))
@@ -90,13 +89,16 @@ def practice(request):
 @require_http_methods(["POST"])
 def test_check_view(request):
     template = loader.get_template('chingo/test_check.html')
-    question_id = request.POST.get('question_id', -1)
-    question = get_object_or_404(Word, id=question_id)
-    grade = game.check(request)
+    test_form = TestForm(request.POST)
+    test_form.is_valid()
+    grade = game.check(request, **test_form.cleaned_data)
     context = {
         'grade': grade,
-        'question': question,
-        'score': Score.objects.by_user_and_word(request.user, question)
+        'question': test_form.cleaned_data['question'],
+        'score': Score.objects.by_user_and_word(
+            request.user, 
+            test_form.cleaned_data['question']
+            )
         }
     return HttpResponse(template.render(context, request))
 
@@ -114,7 +116,7 @@ def word_add_view(request, list_id):
     word_list = get_object_or_404(WordList, pk=list_id)
     form = WordForm(request.POST)
     if form.is_valid():
-        new_word = form.save()
+        new_word = form.save(creator=request.user)
         word_list.words.add(new_word)
         game.score_word(request.user, new_word)
         return redirect(reverse('chingo:list', kwargs={'list_id':list_id}))
@@ -188,5 +190,9 @@ def word_edit_view(request, list_id):
 @require_http_methods(["POST"])
 def word_suggest_view(request):
     wordform = WordForm(request.POST)
-    suggestions = game.word_suggestions(wordform.data)
+    wordform.is_valid()
+    suggestions = [
+        {'label':str(word) , 'id':word.id} 
+        for word in Word.objects.suggestions(**wordform.cleaned_data)
+        ] 
     return JsonResponse(suggestions, safe=False)

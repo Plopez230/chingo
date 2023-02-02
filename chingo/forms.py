@@ -1,6 +1,5 @@
-from django.forms import ModelForm, IntegerField, BooleanField, Form
+from django.forms import ModelForm, IntegerField, BooleanField, Form, ModelChoiceField
 from .models import Word, WordList
-from django.core import validators
 from .pinyin_marker import mark_text
 
 class WordForm(ModelForm):
@@ -15,10 +14,18 @@ class WordForm(ModelForm):
             'part_of_speech'
             ]
 
+    def save(self, *args, **kwargs):
+        self.instance.creator = kwargs.pop('creator', None)
+        instance = super(WordForm, self).save(*args, **kwargs)
+        return instance
+
     def clean(self):
         super().clean()
-        pinyin = self.cleaned_data['pinyin']
-        self.cleaned_data['pinyin'] = mark_text(pinyin)
+        if 'pinyin' in self.cleaned_data:
+            self.cleaned_data['pinyin'] = mark_text(
+                self.cleaned_data['pinyin']
+                )
+
 
 class WordListForm(ModelForm):
     class Meta:
@@ -43,12 +50,11 @@ class GameConfigForm(Form):
 
     def clean(self):
         super().clean()
-        try:
-            options = int(self.cleaned_data['options'])
-        except:
-            options = 4
-        if options < 2:
-            options = 2
-        if self.cleaned_data['timer'] and self.cleaned_data['timer'] < 0:
-            self.cleaned_data['timer'] = 0
-        self.cleaned_data['options'] = options
+        self.cleaned_data['options'] = max(2, self.cleaned_data.get('options', 3))
+        if self.cleaned_data['timer']:
+            self.cleaned_data['timer'] = max(0, self.cleaned_data.get('timer', 0))
+
+
+class TestForm(Form):
+    question = ModelChoiceField(queryset=Word.objects.all())
+    answer = ModelChoiceField(queryset=Word.objects.all())

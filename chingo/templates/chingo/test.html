@@ -22,16 +22,16 @@
           </div>
           <form action="{% url 'chingo:test_check' %}" method="post" id="time-over">
             {% csrf_token %}
-            <input type="hidden" name="question_id" id="edit_id" value="{{ question.word.id }}">
-            <input type="hidden" name="answer_id" id="edit_id" value="0">
+            <input type="hidden" name="question" value="{{ question.word.id }}">
+            <input type="hidden" name="answer" value="0">
           </form>
           </div>
         {% endif %}
         {% for answer in question.answers %}
         <form action="{% url 'chingo:test_check' %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="question_id" id="edit_id" value="{{ question.word.id }}">
-          <input type="hidden" name="answer_id" id="edit_id" value="{{ answer.word.id }}">
+          <input type="hidden" name="question" value="{{ question.word.id }}">
+          <input type="hidden" name="answer" value="{{ answer.word.id }}">
           <a type="button" class="btn btn-outline-info btn-block btn-flat" onclick="this.parentNode.submit();"><h3>{{ answer.label }}</h3></a>
         </form>
         {% endfor %}
