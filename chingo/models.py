@@ -52,14 +52,6 @@ class ChingoUser(AbstractUser):
 
 class WordManager(models.Manager):
 
-	def create(self, *args, **kwargs):
-		new_word = super(WordManager, self).create(*args, **kwargs)
-		print (new_word)
-		new_word.creator.words_included += 1
-		print (new_word.creator)
-		new_word.save()
-		return new_word
-
 	def question_options(self, word, wordlist):
 		queryset = self.get_queryset()
 		if wordlist:
