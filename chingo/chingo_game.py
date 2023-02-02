@@ -137,7 +137,7 @@ def score_test(request, question, grade):
         score.save()
         request.user.save()
 
-def check(request, question, answer):
+def check(request):
     question = int(request.POST.get('question_id', -1))
     answer = int(request.POST.get('answer_id', -1))
     expected = request.session['game'][0]

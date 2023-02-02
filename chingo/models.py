@@ -159,6 +159,12 @@ class ScoreManager(models.Manager):
 		if user.is_authenticated:
 			queryset = self.get_queryset().filter(player=user).order_by('-wrong')
 		return queryset
+	
+	def by_user_and_word(self, user, word):
+		score = None
+		if user.is_authenticated:
+			score, created = self.get_or_create(player=user.id, word=word.id)
+		return score
 
 class Score(models.Model):
 	objects = ScoreManager()

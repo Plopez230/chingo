@@ -73,12 +73,9 @@ def test_view(request):
         return redirect(reverse('chingo:index'))
     template = loader.get_template('chingo/test.html')
     question = game.next_question(request)
-    score = None
-    if request.user.is_authenticated:
-        score = question['word'].scores.filter(player=request.user)[0]
     context = {
         'question': question,
-        'score': score
+        'score': Score.objects.by_user_and_word(request.user, question['word'])
     }
     return HttpResponse(template.render(context, request))
 
@@ -95,19 +92,11 @@ def test_check_view(request):
     template = loader.get_template('chingo/test_check.html')
     question_id = request.POST.get('question_id', -1)
     question = get_object_or_404(Word, id=question_id)
-    answer_id = request.POST.get('answer_id', -1)
-    answer = None
-    if (int(answer_id) > 0):
-        answer = get_object_or_404(Word, id=answer_id)
-    grade = game.check(request, question, answer)
-    score = None
-    if request.user.is_authenticated:
-        score = question.scores.filter(player=request.user)[0]
+    grade = game.check(request)
     context = {
         'grade': grade,
         'question': question,
-        'answer': answer,
-        'score': score
+        'score': Score.objects.by_user_and_word(request.user, question)
         }
     return HttpResponse(template.render(context, request))
 
