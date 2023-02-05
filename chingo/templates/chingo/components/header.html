@@ -58,12 +58,13 @@
   </div>
 </nav>
 
+<!-- stroke modal -->
+{% include "chingo/components/stroke_modal.html" %}
+
 {% if user.is_authenticated %}
 
 <!-- add wordlist modal -->
 {% include "chingo/components/add_wordlist_modal.html" %}
 
-<!-- stroke modal -->
-{% include "chingo/components/stroke_modal.html" %}
 
 {% endif %}
