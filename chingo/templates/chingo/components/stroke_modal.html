@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load static %}
+
+<div class="modal fade" id="stroke" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <div class="row" id="multiple-character-target-div" style="display: flex; 
+          justify-content: center; margin-top: 50px; margin-bottom: 50px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.2/dist/hanzi-writer.min.js"></script>
+<script src="{% static 'dist/js/stroke.js'%}"></script>
