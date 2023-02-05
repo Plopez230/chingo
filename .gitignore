@@ -3,3 +3,4 @@
 chingo/migrations/*.py
 *.webp
 *.sqlite3
+*.mp3

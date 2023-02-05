@@ -1,0 +1,92 @@
+
+{% load i18n %}
+{% load static %}
+
+<div class="modal fade" id="edit-word" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<form method="post" action="{% url 'chingo:word_edit' list_id=list.id%}">
+				{% csrf_token %}
+				<input type="hidden" name="word_id" id="edit_id" value="{{ word_id }}">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						{% translate "Edit word" %}
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form class="form-horizontal">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12 col-lg-6 col-xl-6">
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="simplified" id="edit_simplified"
+											placeholder="{% translate 'simplified word' %}"
+											value="{{ word_edit_form.simplified.value }}">
+										{{ word_edit_form.simplified.errors }}
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="pinyin" id="edit_pinyin"
+											placeholder="{% translate 'pinyin' %}"
+											value="{{ word_edit_form.pinyin.value }}">
+										{{ word_edit_form.pinyin.errors }}
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<select class="form-control" name="part_of_speech" id="edit_part_of_speech">
+											{% for part_of_speech in parts_of_speech %}
+											<option value="{{ part_of_speech.0 }}">
+												{% translate part_of_speech.1 %}
+											</option>
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 col-lg-6 col-xl-6">
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="traditional" id="edit_traditional"
+											placeholder="{% translate 'traditional word' %}"
+											value="{{ word_edit_form.traditional.value }}">
+										{{ word_edit_form.traditional.errors }}
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="translation" id="edit_translation"
+											placeholder="{% translate 'translation' %}"
+											value="{{ word_edit_form.translation.value }}">
+										{{ word_edit_form.translation.errors }}
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="classifier" id="edit_classifiers"
+											placeholder="{% translate 'classifiers' %}"
+											value="{{ word_edit_form.classifier.value }}">
+										{{ word_edit_form.classifier.errors }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-12">
+								<button type="submit" class="btn btn-info float-right">
+									{% translate "Edit word" %}
+								</button>
+							</div>
+						</div>
+						<p></p>
+					</div>
+				</form>
+			</form>
+		</div>
+	</div>
+</div>

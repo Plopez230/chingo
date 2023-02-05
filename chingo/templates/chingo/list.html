@@ -12,326 +12,23 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<!-- Edit list description modal -->
-<div class="modal fade" id="edit-description" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <form method="post" action="{% url 'chingo:list_edit' list_id=list.id %}">
-        {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            {% translate "Edit list" %}
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12">
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control" name="name" placeholder="{% translate 'name' %}"
-                    value="{{ list.name }}">
-                </div>
-                {{ list_edit_form.name.errors }}
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <textarea class="form-control" name="description" rows="3"
-                    placeholder="{% translate 'description' %}">{{ list.description }}</textarea>
-                </div>
-                {{ list_edit_form.description.errors }}
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <textarea class="form-control" name="image" rows="2" 
-                  placeholder="{% translate 'image url' %}">{{ list.image }}</textarea>
-                </div>
-                {{ list_edit_form.image.errors }}
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-12"><button type="submit" class="btn btn-info float-right">
-                {% translate "Edit list" %}
-              </button></div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Add word to list modal -->
-<div class="modal fade" id="add-word" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{% translate "Add word" %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" id="new-word-form" action="{% url 'chingo:word_add' list_id=list.id %}">{% csrf_token %}
-          <div class="row">
-            <div class="col-md-12 col-lg-6 col-xl-6">
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control" name="simplified" id="add_simplified" oninput="suggest_words()"
-                    placeholder="{% translate 'simplified word' %}">
-                {{ word_add_form.simplified.errors }}
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control" name="pinyin" id="add_pinyin" oninput="suggest_words()"
-                    placeholder="{% translate 'pinyin' %}">
-                    {{ word_add_form.pinyin.errors }}
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <select class="form-control" name="part_of_speech" onchange="suggest_words()">
-                    {% for part_of_speech in parts_of_speech %}
-                    <option value="{{ part_of_speech.0 }}">
-                      {% translate part_of_speech.1 %}
-                    </option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-6 col-xl-6">
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control" name="traditional" id="add_traditional"  oninput="suggest_words()"
-                    placeholder="{% translate 'traditional word' %}">
-                    {{ word_add_form.traditional.errors }}
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control" name="translation" id="add_translation" oninput="suggest_words()"
-                    placeholder="{% translate 'translation' %}">
-                    {{ word_add_form.translation.errors }}
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control" name="classifier" id="add_classifiers" oninput="suggest_words()"
-                    placeholder="{% translate 'classifiers' %}">
-                    {{ word_add_form.classifier.errors }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-12">
-              <button type="submit" class="btn btn-info float-right">
-                {% translate "Add new word" %}
-              </button>
-            </div>
-          </div>
-        </form>
-        <p></p>
-      </div>
-      <div class="table-responsive p-0" id="suggestions" style="height: 200px;">
-            <form method="post">
-              {% csrf_token %}
-        <table class="table table-head-fixed text-nowrap">
-          <thead>
-            <tr>
-              <th>{% translate "add a word from the database" %}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-            </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Edit word from list modal -->
-<div class="modal fade" id="edit-word" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <form method="post" action="{% url 'chingo:word_edit' list_id=list.id%}">
-        {% csrf_token %}
-        <input type="hidden" name="word_id" id="edit_id" value="{{ word_id }}">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            {% translate "Edit word" %}
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form class="form-horizontal">
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-12 col-lg-6 col-xl-6">
-                <div class="form-group row">
-                  <div class="col-sm-12">
-                    <input type="text" class="form-control" name="simplified" id="edit_simplified"
-                      placeholder="{% translate 'simplified word' %}" value="{{ word_edit_form.simplified.value }}">
-                      {{ word_edit_form.simplified.errors }}
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-12">
-                    <input type="text" class="form-control" name="pinyin" id="edit_pinyin"
-                      placeholder="{% translate 'pinyin' %}" value="{{ word_edit_form.pinyin.value }}">
-                      {{ word_edit_form.pinyin.errors }}
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-12">
-                    <select class="form-control" name="part_of_speech" id="edit_part_of_speech">
-                      {% for part_of_speech in parts_of_speech %}
-                      <option value="{{ part_of_speech.0 }}">
-                        {% translate part_of_speech.1 %}
-                      </option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 col-lg-6 col-xl-6">
-                <div class="form-group row">
-                  <div class="col-sm-12">
-                    <input type="text" class="form-control" name="traditional" id="edit_traditional"
-                      placeholder="{% translate 'traditional word' %}" value="{{ word_edit_form.traditional.value }}">
-                      {{ word_edit_form.traditional.errors }}
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-12">
-                    <input type="text" class="form-control" name="translation" id="edit_translation"
-                      placeholder="{% translate 'translation' %}" value="{{ word_edit_form.translation.value }}">
-                      {{ word_edit_form.translation.errors }}
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-12">
-                    <input type="text" class="form-control" name="classifier" id="edit_classifiers"
-                      placeholder="{% translate 'classifiers' %}" value="{{ word_edit_form.classifier.value }}">
-                      {{ word_edit_form.classifier.errors }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-sm-12">
-                <button type="submit" class="btn btn-info float-right">
-                  {% translate "Edit word" %}
-                </button>
-              </div>
-            </div>
-            <p></p>
-          </div>
-        </form>
-      </form>
-    </div>
-  </div>
-</div>
+
+<!-- edit list modal -->
+{% include "chingo/components/edit_wordlist_modal.html" %}
+
+<!-- add word modal -->
+{% include "chingo/components/add_word_modal.html" %}
+
+<!-- edit word modal -->
+{% include "chingo/components/edit_word_modal.html" %}
+
 {% endif %}
 <!-- Game config modal -->
-<div class="modal fade" id="game_config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
+{% include "chingo/components/game_config_modal.html" %}
 
+<!-- Stroke modal -->
+{% include "chingo/components/stroke_modal.html" %}
 
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
-            {% translate "Practice" %}
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12">
-
-              <form action="{% url 'chingo:practice' %}" method="post">
-                {% csrf_token %}
-
-                <input type="hidden" name="list_id" value="{{ list.id }}">
-
-                <div class="row">
-                  <div class="col-md-6 col-xs-12">
-                    
-                <div class="form-group">
-                  <label >{% translate 'Number of options' %}</label>
-                  <input type="number" name="options" class="form-control" placeholder="{% translate 'Number of options' %}">
-                  </div>
-                  </div>
-                  <div class="col-md-6 col-xs-12">
-                    <div class="form-group">
-                    <label for="customRange1">{% translate 'Timer' %}</label>
-                    <input type="number" name="timer" class="form-control" placeholder="{% translate 'time in seconds (0 disables the timer)' %}">
-                    </div>
-                  </div>
-                </div>
-                <label>{% translate 'Question type' %}</label>
-                <div class="row">
-                  <div class="col-md-4 col-xs-12">
-                    <div class="form-group">
-                      <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="simplified_pinyin" name="simplified_pinyin" value="simplified_pinyin">
-                        <label for="simplified_pinyin" class="custom-control-label">{% translate "Simplified -> Pinyin" %}</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="simplified_translation" name="simplified_translation" value="simplified_translation">
-                        <label for="simplified_translation" class="custom-control-label">{% translate "Simplified -> Translation" %}</label>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4 col-xs-12">
-                    <div class="form-group">
-                      <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="pinyin_simplified" name="pinyin_simplified" value="pinyin_simplified">
-                        <label for="pinyin_simplified" class="custom-control-label">{% translate "Pinyin -> Simplified" %}</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="pinyin_translation" name="pinyin_translation" value="pinyin_translation">
-                        <label for="pinyin_translation" class="custom-control-label">{% translate "Pinyin -> Translation" %}</label>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4 col-xs-12">
-                    <div class="form-group">
-                      <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="translation_simplified" name="translation_simplified" value="translation_simplified">
-                        <label for="translation_simplified" class="custom-control-label">{% translate "Translation -> Simplified" %}</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-info" type="checkbox" id="translation_pinyin" name="translation_pinyin" value="translation_pinyin">
-                        <label for="translation_pinyin" class="custom-control-label">{% translate "Translation -> Pinyin" %}</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                  <button type="submit" class="btn btn-info btn-block btn-flat">
-                    {% translate "Practice with this list" %}</button>
-                </form>
-
-            </div>
-          </div>
-
-        </div>
-
-    </div>
-  </div>
-</div>
 <!-- Description widget -->
 <div class="row">
   <div class="col-md-12 col-lg-6 col-xl-4">
@@ -361,6 +58,10 @@
             data-target="#edit-description">{% translate "Edit description" %}</button>
         </div>
         {% endif %}
+        <div class="col-md-12 col-lg-6 col-xl-4" style="padding:7.5px !important;">
+          <button type="button" class="btn btn-info btn-block btn-flat" data-toggle="modal"
+            data-target="#stroke">{% translate "Write" %}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -399,8 +100,8 @@
           <tbody>
             {% for word in list.words.all %}
             <tr onclick="new Audio('{% url 'chingo:sing' word_id=word.id %}').play()">
-              <td>{{ word.simplified }}</td>
-              <td>{{ word.traditional }}</td>
+              <td onclick="write_hanzi_strokes(this.textContent);">{{ word.simplified }}</td>
+              <td onclick="write_hanzi_strokes(this.textContent);">{{ word.traditional }}</td>
               <td>{{ word.pinyin }}</td>
               <td>{% translate word.get_part_of_speech_display %}</td>
               <td>{{ word.classifier }}</td>

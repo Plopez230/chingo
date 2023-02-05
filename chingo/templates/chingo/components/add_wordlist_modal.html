@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load static %}
+
+<div class="modal fade hide" id="create-list" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <form method="post" action="{% url 'chingo:list_add' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            {% translate 'Create list' %}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12">
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" name="name" placeholder="{% translate 'name' %}"
+                    value="{{ list_form.name.value }}">
+                </div>
+                {{ list_form.name.errors }}
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <textarea class="form-control" rows="3" name="description"
+                    placeholder="{% translate 'description' %}">{{ list_form.description.value }}</textarea>
+                </div>
+                {{ list_form.description.errors }}
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <textarea class="form-control" rows="2" name="image" 
+                  placeholder="{% translate 'image url' %}">{{ list_form.image.value }}</textarea>
+                </div>
+                {{ list_form.image.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-info float-right">
+                {% translate 'Create new list' %}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

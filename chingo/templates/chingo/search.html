@@ -1,8 +1,8 @@
 {% extends "base_generic.html" %}
 {% load i18n %}
 {% load static %}
-{% block content %}
 
+{% block content %}
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-7 col-sm-12">
@@ -12,29 +12,42 @@
             <h3>{% translate "Words matching the keyword" %} "{{ request.GET.keyword }}"</h3>
           </div>
         </div>
-          {% for word in words %}
-
-        
-
+        {% for word in words %}
         <div class="row">
           <div class="col-sm-12">
-            <h5><strong class="text-info" onclick="new Audio('{% url 'chingo:sing' word_id=word.id %}').play()">{{ word.simplified }}</strong> {{ word.pinyin }}   </h5> 
-            <p>{% translate word.get_part_of_speech_display %}. {{ word.translation }} <br>{{ word.creator }}. {{ word.creation_date }}
-              <br>{% translate "lists where it appears" %}: {% for list in word.lists.all %}
-              <a href="{% url 'chingo:list' list_id=list.id %}">{{ list.name }}</a>
+            <h5>
+              <strong class="text-info" onclick="new Audio('{% url 'chingo:sing' word_id=word.id %}').play()">
+                {{ word.simplified }}
+              </strong>
+              {{ word.pinyin }}
+            </h5>
+            <p>
+              {% translate word.get_part_of_speech_display %}.
+              {{ word.translation }}
+              <br>
+              {{ word.creator }}.
+              {{ word.creation_date }}
+              <br>
+              {% translate "lists where it appears" %}:
+              {% for list in word.lists.all %}
+              <a href="{% url 'chingo:list' list_id=list.id %}">
+                {{ list.name }}
+              </a>
               {% empty %}
               {% translate "no lists" %}
-              {% endfor %}</p>
+              {% endfor %}
+            </p>
           </div>
-          
         </div>
         {% empty %}
         <div class="row">
           <div class="col-sm-12">
-            <h5>{% translate "No words found" %}</h5>
+            <h5>
+              {% translate "No words found" %}
+            </h5>
           </div>
         </div>
-          <p></p>
+        <p></p>
         {% endfor %}
       </div>
     </div>
@@ -42,40 +55,46 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-12">
-            <h3>{% translate "Lists matching the keyword" %} "{{ request.GET.keyword }}"</h3>
+            <h3>
+              {% translate "Lists matching the keyword" %}
+              "{{ request.GET.keyword }}"
+            </h3>
           </div>
         </div>
         <div class="row">
           {% for list in lists %}
           <div class="col-md-12">
             <div class="card mb-2 bg-gradient-dark">
-              <img class="card-img-top" src="{{ list.image }}" alt="Dist Photo 1" onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" style="filter:brightness(70%)">
+              <img class="card-img-top" src="{{ list.image }}" alt="Dist Photo 1"
+                onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" s tyle="filter:brightness(70%)">
               <div class="card-img-overlay d-flex flex-column justify-content-end">
-                <h5 class="card-title text-primary text-white"><a href="{% url 'chingo:list' list_id=list.id %}"
-                    class="text-white">{{ list.name }}</a></h5>
-                <p class="card-text text-white pb-2 pt-1"><a href="{% url 'chingo:list' list_id=list.id %}"
-                    class="text-white">{{ list.description }}</a></p>
+                <h5 class="card-title text-primary text-white">
+                  <a href="{% url 'chingo:list' list_id=list.id %}" class="text-white">
+                    {{ list.name }}
+                  </a>
+                </h5>
+                <p class="card-text text-white pb-2 pt-1">
+                  <a href="{% url 'chingo:list' list_id=list.id %}" class="text-white">
+                    {{ list.description }}
+                  </a>
+                </p>
                 <a href="{% url 'chingo:list' list_id=list.id %}" class="text-white">
                   {{ list.owner.username }}.
-                  {{ list.creation_date }}</a>
+                  {{ list.creation_date }}
+                </a>
               </div>
             </div>
           </div>
           {% empty %}
-            <div class="col-sm-12">
-              <h5>{% translate "No lists found" %}</h5>
-            </div>
+          <div class="col-sm-12">
+            <h5>
+              {% translate "No lists found" %}
+            </h5>
+          </div>
           {% endfor %}
         </div>
       </div>
     </div>
   </div>
-  
 </div>
-
-
-<!-- Words found -->
-
-<!-- Lists found -->
-
 {% endblock %}

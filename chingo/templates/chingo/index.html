@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block content %}
+
 {% if request.user.is_authenticated %}
 <!-- User rank widget -->
 <div class="row">
@@ -77,7 +78,7 @@
     <div class="col-md-12 col-lg-4 col-xl-4 mb-2">
       {% for list in ls %}
       <div class="card mb-2 bg-gradient-dark" style="margin-bottom: 15px !important;">
-        <img class="card-img-top" src="{{ list.image }}" onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" style="filter:brightness(70%)">
+        <img class="card-img-top" src="{{ list.image }}" onerror="this.src='{% static 'dist/img/logo-mini.png' %}';" style="filter:brightness(50%)">
         <div class="card-img-overlay d-flex flex-column justify-content-end">
           <h5 class="card-title text-primary text-white"><a href="{% url 'chingo:list' list_id=list.id %}"
               class="text-white">{{ list.name }}. {{ list.word_count }} {% translate 'words' %}</a></h5>
