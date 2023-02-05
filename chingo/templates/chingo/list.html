@@ -26,9 +26,6 @@
 <!-- Game config modal -->
 {% include "chingo/components/game_config_modal.html" %}
 
-<!-- Stroke modal -->
-{% include "chingo/components/stroke_modal.html" %}
-
 <!-- Description widget -->
 <div class="row">
   <div class="col-md-12 col-lg-6 col-xl-4">
@@ -58,10 +55,6 @@
             data-target="#edit-description">{% translate "Edit description" %}</button>
         </div>
         {% endif %}
-        <div class="col-md-12 col-lg-6 col-xl-4" style="padding:7.5px !important;">
-          <button type="button" class="btn btn-info btn-block btn-flat" data-toggle="modal"
-            data-target="#stroke">{% translate "Write" %}</button>
-        </div>
       </div>
     </div>
   </div>
@@ -100,8 +93,8 @@
           <tbody>
             {% for word in list.words.all %}
             <tr onclick="new Audio('{% url 'chingo:sing' word_id=word.id %}').play()">
-              <td onclick="write_hanzi_strokes(this.textContent);">{{ word.simplified }}</td>
-              <td onclick="write_hanzi_strokes(this.textContent);">{{ word.traditional }}</td>
+              <td onclick="show_stroke_modal(this.textContent);">{{ word.simplified }}</td>
+              <td onclick="show_stroke_modal(this.textContent);">{{ word.traditional }}</td>
               <td>{{ word.pinyin }}</td>
               <td>{% translate word.get_part_of_speech_display %}</td>
               <td>{{ word.classifier }}</td>

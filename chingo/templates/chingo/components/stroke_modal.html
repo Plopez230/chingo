@@ -11,6 +11,26 @@
           justify-content: center; margin-top: 50px; margin-bottom: 50px;">
           </div>
         </div>
+        <div class="row">
+					<div class="col-md-12 col-lg-12 col-xl-12">
+
+							<div class="row">
+								<div class="col-md-8 col-xs-8">
+									<div class="form-group">
+                    <label>{% translate "Speed" %}</label>
+                    <input id="range-speed" type="range" min="1" max="250" value="100" class="custom-range custom-range-info">
+                    </div>
+								</div>
+								<div class="col-md-4 col-xs-4">
+										<button onclick="write_hanzi_strokes(($('#range-speed').value))" class="btn btn-info btn-block btn-flat">
+                      {% translate "Draw again" %}
+                    </button>
+								</div>
+							</div>
+							
+						
+					</div>
+				</div>
       </div>
     </div>
   </div>

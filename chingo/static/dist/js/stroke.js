@@ -13,8 +13,9 @@ function create_divs(n) {
   
   var chars;
   var timeout;
+  var text;
   
-  function create_chars(characters){
+  function create_chars(characters, speed){
     chars = [];
     for (var i = 0; i < characters.length; i++){
       chars.push (HanziWriter.create(
@@ -25,8 +26,8 @@ function create_divs(n) {
           height: 130,
           padding: 0,
           strokeColor: '#17a2b8',
-          outlineColor: '#cccccc',
-          strokeAnimationSpeed: 1,
+          outlineColor: '#dddddd',
+          strokeAnimationSpeed: speed,
           delayBetweenStrokes: 10,
           delayBetweenLoops: 3000,
           showCharacter: false
@@ -50,12 +51,18 @@ function create_divs(n) {
     })
   }
   
-  function write_hanzi_strokes (text){
+  function write_hanzi_strokes (){
     if (!text)
         return;
-    $('#stroke').modal('show'); 
     characters = text.split("");
     create_divs(characters.length);
-    create_chars(characters);
+    create_chars(characters, $('#range-speed')[0].value/100.0);
     chainAnimations(0);
   }
+
+  function show_stroke_modal (txt){
+    $('#stroke').modal('show'); 
+    text = txt;
+    write_hanzi_strokes ();
+  }
+
