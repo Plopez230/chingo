@@ -19,6 +19,10 @@ jobs:
       MAIN_BRANCH: ${{ secrets.MAIN_BRANCH }}
     
     steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: install SSH keys
       run: |
         install -m 600 -D /dev/null ~/.ssh/id_rsa
