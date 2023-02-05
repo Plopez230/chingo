@@ -26,6 +26,10 @@ jobs:
         echo ${{ env.SSH_HOST }}
         ssh-keyscan -H ${{ env.SSH_HOST }} > ~/.ssh/known_hosts
     - name: connect, checkout and deploy
-      run:  ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "exit"
+      run:  ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "cd ${{ env.WORK_DIR }} 
+          && git checkout ${{ env.MAIN_BRANCH }} 
+          && git pull 
+          && bash entrypoint.sh
+          && exit"
     - name: cleanup
       run: rm -rf ~/.ssh
