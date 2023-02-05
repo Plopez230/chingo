@@ -10,6 +10,7 @@ jobs:
   build:
     name: Buildear Django
     runs-on: ubuntu-latest
+    environment: Django-projects
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_HOST: ${{ secrets.SSH_HOST }}
