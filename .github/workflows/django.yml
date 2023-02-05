@@ -10,17 +10,23 @@ jobs:
   build:
     name: Buildear Django
     runs-on: ubuntu-latest
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      WORK_DIR: ${{ secrets.WORK_DIR }}
+      MAIN_BRANCH: ${{ secrets.MAIN_BRANCH }}
     
     steps:
     - name: install SSH keys
       run: |
         install -m 600 -D /dev/null ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         echo ${{ env.SSH_HOST }}
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ env.SSH_HOST }} > ~/.ssh/known_hosts
     - name: connect, checkout and deploy
-      run:  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} 
-          && git checkout ${{ secrets.MAIN_BRANCH }} 
+      run:  ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "cd ${{ env.WORK_DIR }} 
+          && git checkout ${{ env.MAIN_BRANCH }} 
           && git pull 
           && bash entrypoint.sh
           && exit"
