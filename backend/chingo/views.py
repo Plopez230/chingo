@@ -24,6 +24,10 @@ def index_view(request):
         }
     return HttpResponse(template.render(context, request))
 
+def app_index_view(request):
+    template = loader.get_template('chingo/app_index.html')
+    return HttpResponse(template.render({}, request))
+
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)

@@ -1,0 +1,38 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chingo</title>
+  <link rel="icon" href="{%static 'dist/img/fav.png' %}" type="image/x-icon">
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{%static 'dist/css/adminlte.css'%}">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="{%static 'plugins/toastr/toastr.min.css'%}">
+</head>
+
+<body class="hold-transition layout-top-nav">
+
+    <app-root></app-root>
+
+  <!-- jQuery -->
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <!-- Bootstrap 4 -->
+  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <!-- Toastr -->
+  <script src="{% static 'plugins/toastr/toastr.min.js'%}"></script>
+  <!-- Page specific script -->
+  <script src="{%static 'dist/frontend/runtime.js'%}"></script>
+  <script src="{%static 'dist/frontend/polyfills.js'%}"></script>
+  <script src="{%static 'dist/frontend/main.js'%}"></script>
+
+</body>
+
+</html>
