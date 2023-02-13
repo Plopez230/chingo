@@ -1,6 +1,6 @@
 
 *.pyc
-chingo/migrations/*.py
+backend/chingo/migrations/*.py
 *.webp
 *.sqlite3
 *.mp3
